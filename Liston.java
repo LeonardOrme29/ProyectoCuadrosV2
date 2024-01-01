@@ -1,0 +1,29 @@
+public class Liston {
+    private double largo;
+    private double precio_costo;
+    private double marco_tam_cm;
+    private double profundidad;
+    public Liston(double largo, double precio_costo, double marco_tam_cm, double profundidad){
+        this.largo=largo;
+        this.precio_costo=precio_costo;
+        this.marco_tam_cm=marco_tam_cm;
+        this.profundidad=profundidad;
+    }
+    //GETTERS
+    public double getLargo(){
+        return this.largo;
+    }
+    public double getPrecio_costo(){
+        return this.precio_costo;
+    }
+    public double getMarco_tam_cm(){
+        return this.marco_tam_cm;
+    }
+    public double getProfundidad(){
+        return this.profundidad;
+    }
+    //METODOS
+    public double precio_costo_cm(){
+        return this.precio_costo/this.largo;
+    }
+}
