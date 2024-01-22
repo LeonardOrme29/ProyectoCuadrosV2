@@ -1,3 +1,5 @@
+package clases.materiales;
+
 public class Liston {
     private double largo;
     private double precio_costo;
@@ -25,5 +27,8 @@ public class Liston {
     //METODOS
     public double precio_costo_cm(){
         return this.precio_costo/this.largo;
+    }
+    public double precio_liston(double tamCuadro){
+        return tamCuadro*precio_costo_cm();
     }
 }

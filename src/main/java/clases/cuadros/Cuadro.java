@@ -1,12 +1,19 @@
+package clases.cuadros;
+
+import clases.materiales.Clavo;
+import clases.materiales.Liston;
+
 public class Cuadro {
     private String tipoC;
     private double largo;
     private double ancho;
     private float profundidad;
-    private Liston li;
-    public Cuadro(double largo,double ancho){
+    protected Liston li;
+    protected Clavo clavo;
+    public Cuadro(double largo,double ancho,Liston li){
         this.largo=largo;
         this.ancho=ancho;
+        this.li=li;
     }
     // SETTERS
     public void setTipoC(String tipoC) {
@@ -24,6 +31,9 @@ public class Cuadro {
     public void setListon(Liston li) {
         this.li = li;
     }
+    public void setClavo(Clavo clavo){
+        this.clavo=clavo;
+    }
     // GETTERS
     public String getTipoC() {
         return tipoC;
@@ -40,7 +50,13 @@ public class Cuadro {
     public Liston getListon() {
         return li;
     }
+    public Clavo getClavo() {
+        return clavo;
+    }
     //METODOS
+    public double tamArte(){
+        return largo*ancho;
+    }
     public double tamCuadro(){
         return (largo*2)+(ancho*2)+(li.getMarco_tam_cm()*2);
     }
@@ -54,16 +70,15 @@ public class Cuadro {
         } 
         return cont;
     }
-    public double precio_liston(){
-        return tamCuadro()*li.precio_costo_cm();
+    public double costoAdicionales(){//adiccionales pintura, cinta, etc.
+        return (clavo.getCostoUnitario()*8)+2;
     }
     //Main
     public static void main(String[] args) {
-        Cuadro c1=new Cuadro(21,29.7);
         Liston li=new Liston(320, 12.50, 1.5, 2.5);
-        c1.setListon(li);
+        Cuadro c1=new Cuadro(21,29.7,li);
         //System.out.println(c1.tamCuadro());
         System.out.println(c1.cantMadera());
-        System.out.println(c1.precio_liston());
+        System.out.println(li.precio_liston(c1.tamCuadro()));
     }
 }

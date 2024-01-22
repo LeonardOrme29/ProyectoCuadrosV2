@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Form version="1.3" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
+  <NonVisualComponents>
+    <Menu class="javax.swing.JMenuBar" name="jMenuBar1">
+      <SubComponents>
+        <Menu class="javax.swing.JMenu" name="jmVentas">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="VENTAS"/>
+          </Properties>
+          <Events>
+            <EventHandler event="menuKeyTyped" listener="javax.swing.event.MenuKeyListener" parameters="javax.swing.event.MenuKeyEvent" handler="jmVentasMenuKeyTyped"/>
+          </Events>
+          <SubComponents>
+            <Menu class="javax.swing.JMenu" name="jaGenerarPedido">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="GENERAR PEDIDO"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jaGenerarPedidoActionPerformed"/>
+              </Events>
+            </Menu>
+            <Menu class="javax.swing.JMenu" name="jaAnularVenta">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="ANULAR VENTA"/>
+              </Properties>
+            </Menu>
+          </SubComponents>
+        </Menu>
+        <Menu class="javax.swing.JMenu" name="jmInventario">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="INVENTARIO"/>
+          </Properties>
+          <SubComponents>
+            <Menu class="javax.swing.JMenu" name="jaIngreso">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="INGRESO"/>
+              </Properties>
+            </Menu>
+            <Menu class="javax.swing.JMenu" name="jaKardex">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="KARDEX"/>
+              </Properties>
+            </Menu>
+            <Menu class="javax.swing.JMenu" name="jaAjustes">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="AJUSTES"/>
+              </Properties>
+            </Menu>
+          </SubComponents>
+        </Menu>
+        <Menu class="javax.swing.JMenu" name="jmAdministracion">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="ADMINISTRACION"/>
+          </Properties>
+          <SubComponents>
+            <Menu class="javax.swing.JMenu" name="jaProductos">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="PRODUCTOS"/>
+              </Properties>
+            </Menu>
+            <Menu class="javax.swing.JMenu" name="jaInsumos">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="INSUMOS"/>
+              </Properties>
+            </Menu>
+          </SubComponents>
+        </Menu>
+        <Menu class="javax.swing.JMenu" name="jmReportes">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="REPORTES"/>
+          </Properties>
+          <SubComponents>
+            <Menu class="javax.swing.JMenu" name="jaReportesVentas">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="REPORTE DE VENTAS"/>
+              </Properties>
+            </Menu>
+          </SubComponents>
+        </Menu>
+      </SubComponents>
+    </Menu>
+  </NonVisualComponents>
+  <Properties>
+    <Property name="defaultCloseOperation" type="int" value="3"/>
+    <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+      <Dimension value="[1080, 720]"/>
+    </Property>
+    <Property name="resizable" type="boolean" value="false"/>
+    <Property name="size" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+      <Dimension value="[720, 480]"/>
+    </Property>
+  </Properties>
+  <SyntheticProperties>
+    <SyntheticProperty name="menuBar" type="java.lang.String" value="jMenuBar1"/>
+    <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
+    <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
+  </SyntheticProperties>
+  <AuxValues>
+    <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
+    <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
+  </AuxValues>
+
+  <Layout>
+    <DimensionLayout dim="0">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <EmptySpace min="0" pref="1080" max="32767" attributes="0"/>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="1">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <EmptySpace min="0" pref="697" max="32767" attributes="0"/>
+      </Group>
+    </DimensionLayout>
+  </Layout>
+</Form>

@@ -1,3 +1,5 @@
+package clases.venta;
+
 public class Pedido {
     public Pedido(){
 
