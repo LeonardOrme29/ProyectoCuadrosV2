@@ -15,6 +15,7 @@ public class MainVenta extends javax.swing.JFrame {
      */
     public MainVenta() {
         initComponents();
+        setLocationRelativeTo(null);
     }
 
     /**
@@ -28,20 +29,20 @@ public class MainVenta extends javax.swing.JFrame {
 
         jMenuBar1 = new javax.swing.JMenuBar();
         jmVentas = new javax.swing.JMenu();
-        jaGenerarPedido = new javax.swing.JMenu();
-        jaAnularVenta = new javax.swing.JMenu();
+        jaGenerarVenta = new javax.swing.JMenuItem();
+        jaAnularVenta = new javax.swing.JMenuItem();
         jmInventario = new javax.swing.JMenu();
-        jaIngreso = new javax.swing.JMenu();
-        jaKardex = new javax.swing.JMenu();
-        jaAjustes = new javax.swing.JMenu();
+        jaKardex = new javax.swing.JMenuItem();
+        jaIngreso = new javax.swing.JMenuItem();
+        jaAjuste = new javax.swing.JMenuItem();
         jmAdministracion = new javax.swing.JMenu();
-        jaProductos = new javax.swing.JMenu();
-        jaInsumos = new javax.swing.JMenu();
+        jaProductos = new javax.swing.JMenuItem();
+        jaMateriales = new javax.swing.JMenuItem();
         jmReportes = new javax.swing.JMenu();
-        jaReportesVentas = new javax.swing.JMenu();
+        jaReportesVentas = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(1080, 720));
+        setLocation(new java.awt.Point(0, 0));
         setResizable(false);
         setSize(new java.awt.Dimension(720, 480));
 
@@ -55,14 +56,19 @@ public class MainVenta extends javax.swing.JFrame {
                 jmVentasMenuKeyTyped(evt);
             }
         });
-
-        jaGenerarPedido.setText("GENERAR PEDIDO");
-        jaGenerarPedido.addActionListener(new java.awt.event.ActionListener() {
+        jmVentas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jaGenerarPedidoActionPerformed(evt);
+                jmVentasActionPerformed(evt);
             }
         });
-        jmVentas.add(jaGenerarPedido);
+
+        jaGenerarVenta.setText("GENERAR VENTA");
+        jaGenerarVenta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jaGenerarVentaActionPerformed(evt);
+            }
+        });
+        jmVentas.add(jaGenerarVenta);
 
         jaAnularVenta.setText("ANULAR VENTA");
         jmVentas.add(jaAnularVenta);
@@ -71,14 +77,19 @@ public class MainVenta extends javax.swing.JFrame {
 
         jmInventario.setText("INVENTARIO");
 
+        jaKardex.setText("KARDEX");
+        jaKardex.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jaKardexActionPerformed(evt);
+            }
+        });
+        jmInventario.add(jaKardex);
+
         jaIngreso.setText("INGRESO");
         jmInventario.add(jaIngreso);
 
-        jaKardex.setText("KARDEX");
-        jmInventario.add(jaKardex);
-
-        jaAjustes.setText("AJUSTES");
-        jmInventario.add(jaAjustes);
+        jaAjuste.setText("AJUSTE");
+        jmInventario.add(jaAjuste);
 
         jMenuBar1.add(jmInventario);
 
@@ -87,14 +98,24 @@ public class MainVenta extends javax.swing.JFrame {
         jaProductos.setText("PRODUCTOS");
         jmAdministracion.add(jaProductos);
 
-        jaInsumos.setText("INSUMOS");
-        jmAdministracion.add(jaInsumos);
+        jaMateriales.setText("MATERIALES");
+        jaMateriales.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jaMaterialesActionPerformed(evt);
+            }
+        });
+        jmAdministracion.add(jaMateriales);
 
         jMenuBar1.add(jmAdministracion);
 
         jmReportes.setText("REPORTES");
 
         jaReportesVentas.setText("REPORTE DE VENTAS");
+        jaReportesVentas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jaReportesVentasActionPerformed(evt);
+            }
+        });
         jmReportes.add(jaReportesVentas);
 
         jMenuBar1.add(jmReportes);
@@ -119,10 +140,29 @@ public class MainVenta extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jmVentasMenuKeyTyped
 
-    private void jaGenerarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jaGenerarPedidoActionPerformed
+    
+    private void jmVentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmVentasActionPerformed
+
+    }//GEN-LAST:event_jmVentasActionPerformed
+
+    private void jaReportesVentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jaReportesVentasActionPerformed
         // TODO add your handling code here:
-        
-    }//GEN-LAST:event_jaGenerarPedidoActionPerformed
+    }//GEN-LAST:event_jaReportesVentasActionPerformed
+
+    private void jaMaterialesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jaMaterialesActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jaMaterialesActionPerformed
+
+    private void jaKardexActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jaKardexActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jaKardexActionPerformed
+
+    private void jaGenerarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jaGenerarVentaActionPerformed
+        // TODO add your handling code here:
+        DVentas dventas=new DVentas(this,true);
+        dventas.setLocationRelativeTo(this);
+        dventas.setVisible(true);
+    }//GEN-LAST:event_jaGenerarVentaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -161,14 +201,14 @@ public class MainVenta extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenu jaAjustes;
-    private javax.swing.JMenu jaAnularVenta;
-    private javax.swing.JMenu jaGenerarPedido;
-    private javax.swing.JMenu jaIngreso;
-    private javax.swing.JMenu jaInsumos;
-    private javax.swing.JMenu jaKardex;
-    private javax.swing.JMenu jaProductos;
-    private javax.swing.JMenu jaReportesVentas;
+    private javax.swing.JMenuItem jaAjuste;
+    private javax.swing.JMenuItem jaAnularVenta;
+    private javax.swing.JMenuItem jaGenerarVenta;
+    private javax.swing.JMenuItem jaIngreso;
+    private javax.swing.JMenuItem jaKardex;
+    private javax.swing.JMenuItem jaMateriales;
+    private javax.swing.JMenuItem jaProductos;
+    private javax.swing.JMenuItem jaReportesVentas;
     private javax.swing.JMenu jmAdministracion;
     private javax.swing.JMenu jmInventario;
     private javax.swing.JMenu jmReportes;

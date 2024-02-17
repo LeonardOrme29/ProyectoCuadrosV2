@@ -10,21 +10,22 @@
           </Properties>
           <Events>
             <EventHandler event="menuKeyTyped" listener="javax.swing.event.MenuKeyListener" parameters="javax.swing.event.MenuKeyEvent" handler="jmVentasMenuKeyTyped"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jmVentasActionPerformed"/>
           </Events>
           <SubComponents>
-            <Menu class="javax.swing.JMenu" name="jaGenerarPedido">
+            <MenuItem class="javax.swing.JMenuItem" name="jaGenerarVenta">
               <Properties>
-                <Property name="text" type="java.lang.String" value="GENERAR PEDIDO"/>
+                <Property name="text" type="java.lang.String" value="GENERAR VENTA"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jaGenerarPedidoActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jaGenerarVentaActionPerformed"/>
               </Events>
-            </Menu>
-            <Menu class="javax.swing.JMenu" name="jaAnularVenta">
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="jaAnularVenta">
               <Properties>
                 <Property name="text" type="java.lang.String" value="ANULAR VENTA"/>
               </Properties>
-            </Menu>
+            </MenuItem>
           </SubComponents>
         </Menu>
         <Menu class="javax.swing.JMenu" name="jmInventario">
@@ -32,21 +33,24 @@
             <Property name="text" type="java.lang.String" value="INVENTARIO"/>
           </Properties>
           <SubComponents>
-            <Menu class="javax.swing.JMenu" name="jaIngreso">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="INGRESO"/>
-              </Properties>
-            </Menu>
-            <Menu class="javax.swing.JMenu" name="jaKardex">
+            <MenuItem class="javax.swing.JMenuItem" name="jaKardex">
               <Properties>
                 <Property name="text" type="java.lang.String" value="KARDEX"/>
               </Properties>
-            </Menu>
-            <Menu class="javax.swing.JMenu" name="jaAjustes">
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jaKardexActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="jaIngreso">
               <Properties>
-                <Property name="text" type="java.lang.String" value="AJUSTES"/>
+                <Property name="text" type="java.lang.String" value="INGRESO"/>
               </Properties>
-            </Menu>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="jaAjuste">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="AJUSTE"/>
+              </Properties>
+            </MenuItem>
           </SubComponents>
         </Menu>
         <Menu class="javax.swing.JMenu" name="jmAdministracion">
@@ -54,16 +58,19 @@
             <Property name="text" type="java.lang.String" value="ADMINISTRACION"/>
           </Properties>
           <SubComponents>
-            <Menu class="javax.swing.JMenu" name="jaProductos">
+            <MenuItem class="javax.swing.JMenuItem" name="jaProductos">
               <Properties>
                 <Property name="text" type="java.lang.String" value="PRODUCTOS"/>
               </Properties>
-            </Menu>
-            <Menu class="javax.swing.JMenu" name="jaInsumos">
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="jaMateriales">
               <Properties>
-                <Property name="text" type="java.lang.String" value="INSUMOS"/>
+                <Property name="text" type="java.lang.String" value="MATERIALES"/>
               </Properties>
-            </Menu>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jaMaterialesActionPerformed"/>
+              </Events>
+            </MenuItem>
           </SubComponents>
         </Menu>
         <Menu class="javax.swing.JMenu" name="jmReportes">
@@ -71,11 +78,14 @@
             <Property name="text" type="java.lang.String" value="REPORTES"/>
           </Properties>
           <SubComponents>
-            <Menu class="javax.swing.JMenu" name="jaReportesVentas">
+            <MenuItem class="javax.swing.JMenuItem" name="jaReportesVentas">
               <Properties>
                 <Property name="text" type="java.lang.String" value="REPORTE DE VENTAS"/>
               </Properties>
-            </Menu>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jaReportesVentasActionPerformed"/>
+              </Events>
+            </MenuItem>
           </SubComponents>
         </Menu>
       </SubComponents>
@@ -83,8 +93,8 @@
   </NonVisualComponents>
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
-    <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-      <Dimension value="[1080, 720]"/>
+    <Property name="location" type="java.awt.Point" editor="org.netbeans.beaninfo.editors.PointEditor">
+      <Point value="[0, 0]"/>
     </Property>
     <Property name="resizable" type="boolean" value="false"/>
     <Property name="size" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
