@@ -4,6 +4,7 @@
 
 package com.mycompany.taal;
 import clases.materiales.Liston;
+import vistas.MainVenta;
 
 /**
  *
@@ -15,5 +16,7 @@ public class TAAL {
         System.out.println("Hello World!");
         Liston li=new Liston(320, 12.50, 1.5, 2.5);
         System.out.println(li.precio_costo_cm());
+        MainVenta main=new MainVenta();
+        main.setVisible(true);
     }
 }
