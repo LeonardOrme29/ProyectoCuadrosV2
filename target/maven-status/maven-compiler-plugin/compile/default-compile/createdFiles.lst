@@ -18,6 +18,7 @@ vistas\DVentas$5.class
 clases\cuadros\Cuadro.class
 clases\cuadros\CuadroDobleV.class
 clases\venta\Pedido.class
+conexion\Conexion.class
 vistas\DVentas$2.class
 clases\materiales\Cinta.class
 com\mycompany\taal\TAAL.class
