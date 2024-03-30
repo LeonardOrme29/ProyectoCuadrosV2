@@ -3,19 +3,43 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
  */
 package vistas;
-
+import conexion.Conexion;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import logica.*;
+import alertasVistas.*;
 /**
  *
  * @author leonardo.ormeno
  */
 public class DVentas extends javax.swing.JDialog {
-
+    private Pedidos pedido;
+    DefaultTableModel tmodelo;
+    private Connection conex;
+    private ArrayList<Integer> idPedido;
+    
     /**
      * Creates new form DVentas
      */
     public DVentas(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        Conexion cone=new Conexion();
+        conex=cone.conectar();
+        
+        Pedidos p1=new Pedidos();
+        pedido=p1;
+        String nroPedido=pedido.calcNPedido();
+        System.out.println(nroPedido);
+        pedido.crearPedido(nroPedido);
+        pedido_label.setText(pedido.getN_pedido());
+        tmodelo = (DefaultTableModel) tPedido.getModel();
+        //actualizarTablaCuadros();
     }
 
     /**
@@ -32,19 +56,18 @@ public class DVentas extends javax.swing.JDialog {
         jLabel1 = new javax.swing.JLabel();
         jBuscadorVenta = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
+        pedido_label = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tPedido = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
-        jToggleButton1 = new javax.swing.JToggleButton();
         jButton4 = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
+        bCantidad = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(1060, 700));
         setResizable(false);
 
         jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -61,8 +84,8 @@ public class DVentas extends javax.swing.JDialog {
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel2.setText("Nro de pedido:");
 
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel3.setText("0000101");
+        pedido_label.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        pedido_label.setText("0000101");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -76,7 +99,7 @@ public class DVentas extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 403, Short.MAX_VALUE)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel3)
+                .addComponent(pedido_label)
                 .addGap(37, 37, 37))
         );
         jPanel2Layout.setVerticalGroup(
@@ -84,7 +107,7 @@ public class DVentas extends javax.swing.JDialog {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                        .addComponent(jLabel3)
+                        .addComponent(pedido_label)
                         .addComponent(jLabel2))
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(javax.swing.GroupLayout.Alignment.CENTER, jPanel2Layout.createSequentialGroup()
@@ -96,19 +119,16 @@ public class DVentas extends javax.swing.JDialog {
                 .addContainerGap(23, Short.MAX_VALUE))
         );
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tPedido.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+
             },
             new String [] {
                 "Descripción", "Tamaño Art", "Tipo", "Cant", "Precio U", "Precio T"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Double.class, java.lang.Double.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
                 false, false, false, false, false, false
@@ -122,22 +142,20 @@ public class DVentas extends javax.swing.JDialog {
                 return canEdit [columnIndex];
             }
         });
-        jTable1.setColumnSelectionAllowed(true);
-        jScrollPane1.setViewportView(jTable1);
-        jTable1.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(0).setMinWidth(400);
-            jTable1.getColumnModel().getColumn(0).setPreferredWidth(400);
-            jTable1.getColumnModel().getColumn(0).setMaxWidth(450);
-            jTable1.getColumnModel().getColumn(1).setMinWidth(50);
-            jTable1.getColumnModel().getColumn(2).setResizable(false);
-            jTable1.getColumnModel().getColumn(2).setPreferredWidth(1);
-            jTable1.getColumnModel().getColumn(3).setResizable(false);
-            jTable1.getColumnModel().getColumn(3).setPreferredWidth(1);
-            jTable1.getColumnModel().getColumn(4).setResizable(false);
-            jTable1.getColumnModel().getColumn(4).setPreferredWidth(2);
-            jTable1.getColumnModel().getColumn(5).setResizable(false);
-            jTable1.getColumnModel().getColumn(5).setPreferredWidth(2);
+        jScrollPane1.setViewportView(tPedido);
+        if (tPedido.getColumnModel().getColumnCount() > 0) {
+            tPedido.getColumnModel().getColumn(0).setMinWidth(400);
+            tPedido.getColumnModel().getColumn(0).setPreferredWidth(400);
+            tPedido.getColumnModel().getColumn(0).setMaxWidth(450);
+            tPedido.getColumnModel().getColumn(1).setMinWidth(50);
+            tPedido.getColumnModel().getColumn(2).setResizable(false);
+            tPedido.getColumnModel().getColumn(2).setPreferredWidth(1);
+            tPedido.getColumnModel().getColumn(3).setResizable(false);
+            tPedido.getColumnModel().getColumn(3).setPreferredWidth(1);
+            tPedido.getColumnModel().getColumn(4).setResizable(false);
+            tPedido.getColumnModel().getColumn(4).setPreferredWidth(2);
+            tPedido.getColumnModel().getColumn(5).setResizable(false);
+            tPedido.getColumnModel().getColumn(5).setPreferredWidth(2);
         }
 
         jButton1.setFont(new java.awt.Font("Segoe UI Semibold", 0, 18)); // NOI18N
@@ -170,13 +188,6 @@ public class DVentas extends javax.swing.JDialog {
             }
         });
 
-        jToggleButton1.setText("Cambiar Cant");
-        jToggleButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jToggleButton1ActionPerformed(evt);
-            }
-        });
-
         jButton4.setText("Eliminar Producto");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -204,6 +215,13 @@ public class DVentas extends javax.swing.JDialog {
                 .addContainerGap(18, Short.MAX_VALUE))
         );
 
+        bCantidad.setText("Cambiar Cant");
+        bCantidad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bCantidadActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -220,10 +238,10 @@ public class DVentas extends javax.swing.JDialog {
                                 .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(326, 326, 326)
                                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(38, 38, 38)
+                                .addGap(53, 53, 53)
                                 .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(36, 36, 36)
-                                .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(40, 40, 40)
+                                .addComponent(bCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jScrollPane1)
                             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addGap(0, 0, Short.MAX_VALUE))
@@ -242,9 +260,9 @@ public class DVentas extends javax.swing.JDialog {
                         .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(bCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(56, 56, 56))
         );
 
@@ -261,14 +279,47 @@ public class DVentas extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    
+    public void limpiarTablaCuadros(){        
+        tmodelo.setRowCount(0);
+    }
+    
+    public void actualizarTablaCuadros(){
+        //tPedido.setVisible(false);
+        System.out.println("ESTO ES UN EVENTO DISPARADO POS DCUSTOMVENTA ASOCIADO AL PEDIDO NRO:"+pedido.getN_pedido());
+        System.out.println("Inicio de la Limpieza de la tabla");
+        limpiarTablaCuadros();
+        System.out.println("Fin de la limpieza de la tabla");
+        try {
+            System.out.println("rellenar tabla");
+            String sSQL = "SELECT vd.id_vta_det,c.des, c.tipo, c.precio, c.tam, vd.cant,vd.pedido_precio FROM pedido p JOIN vta_det vd ON p.id_pedido = vd.pedido JOIN cuadro c ON vd.cuadro = c.id_cuadro WHERE p.N_PEDIDO = '"+pedido.getN_pedido()+"';";
+            Statement cn = conex.createStatement();
+            ResultSet res = cn.executeQuery(sSQL);
+            ArrayList<Integer> idP = new ArrayList<>();
+            while (res.next()) {
+                // Crear un ArrayList para almacenar los datos de la fila
+                ArrayList<Object> fila = new ArrayList<>();
+                idP.add(res.getInt("id_vta_det"));
+                fila.add(res.getString("des"));
+                fila.add(res.getString("tam"));
+                fila.add(res.getString("tipo"));
+                fila.add(res.getString("cant"));
+                fila.add(res.getString("precio"));
+                fila.add(res.getString("pedido_precio"));
+                // Agregar la fila al modelo de tabla
+                tmodelo.addRow(fila.toArray());
+                idPedido=idP;
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        //tPedido.setVisible(true);
+    }
+    
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
+        
     }//GEN-LAST:event_jButton4ActionPerformed
-
-    private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jToggleButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
@@ -277,17 +328,36 @@ public class DVentas extends javax.swing.JDialog {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
-
+    
     private void jBuscadorVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBuscadorVentaActionPerformed
         // TODO add your handling code here:
+        /*
         DMedidas dmedidas=new DMedidas(new javax.swing.JFrame(),true);
         dmedidas.setLocationRelativeTo(this);
-        dmedidas.setVisible(true);
+        dmedidas.setVisible(true);*/
+        DCustomCraft dcustom=new DCustomCraft(new javax.swing.JFrame(), true,pedido,this);
+        dcustom.setLocationRelativeTo(this);
+        dcustom.setVisible(true);
     }//GEN-LAST:event_jBuscadorVentaActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void bCantidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCantidadActionPerformed
+        // TODO add your handling code here:
+        try{
+            int id=idPedido.get(tPedido.getSelectedRow());
+            CantidadPedido cant_ped=new CantidadPedido(new javax.swing.JFrame(), true,id);
+            cant_ped.setLocationRelativeTo(this);
+            cant_ped.setVisible(true);
+            pedido.cambiarCant(id, cant_ped.getCantidad());
+            actualizarTablaCuadros();
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, "SELECIONE UN CUADRO");
+        }
+
+    }//GEN-LAST:event_bCantidadActionPerformed
 
     /**
      * @param args the command line arguments
@@ -332,6 +402,7 @@ public class DVentas extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton bCantidad;
     private javax.swing.JTextField jBuscadorVenta;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
@@ -339,13 +410,12 @@ public class DVentas extends javax.swing.JDialog {
     private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JToggleButton jToggleButton1;
+    private javax.swing.JLabel pedido_label;
+    private javax.swing.JTable tPedido;
     // End of variables declaration//GEN-END:variables
 }

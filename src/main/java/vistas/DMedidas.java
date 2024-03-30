@@ -160,9 +160,9 @@ public class DMedidas extends javax.swing.JDialog {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         this.dispose();
-        DCustomCraft dcustom=new DCustomCraft(new javax.swing.JFrame(), true);
-        dcustom.setLocationRelativeTo(this);
-        dcustom.setVisible(true);
+        //DCustomCraft dcustom=new DCustomCraft(new javax.swing.JFrame(), true);
+        //dcustom.setLocationRelativeTo(this);
+        //dcustom.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**

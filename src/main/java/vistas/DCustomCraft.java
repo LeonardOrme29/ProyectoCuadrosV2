@@ -6,20 +6,59 @@ package vistas;
 
 import clases.materiales.*;
 import clases.cuadros.*;
+import conexion.*;
+import java.sql.Connection;
+import logica.*;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author leonardo.ormeno
  */
 public class DCustomCraft extends javax.swing.JDialog {
-
+    private Connection conex;
+    private Pedidos pedido;
+    DefaultTableModel modelo;
+    private Liston l1;
+    private Vidrio v1;
+    private Nordex n1;
+    private Varilla va1;
+    private double largo;
+    private double ancho;
+    private String tipoCuadro;
+    private double precioCuadro;
+    
+    static private DVentas dvPadre;
+    private DVentas dvP;
+    
+    private int id_cuadro;
+    private int id_liston;
+    private int id_frontal;
+    private int id_trasera;
+    private int id_varilla;
+    
     /**
      * Creates new form DCustomCraft
      */
-    public DCustomCraft(java.awt.Frame parent, boolean modal) {
+    public DCustomCraft(java.awt.Frame parent, boolean modal,Pedidos p,DVentas dv) {
         super(parent, modal);
         initComponents();
+        //INICIALES base de datos
+        Conexion cone=new Conexion();
+        conex=cone.conectar();
+        pedido=p;
+        //iniciales
+        dvP=dv;
+        labelNroPedido.setText(p.getN_pedido());
+        llenarListonTabla();
+        llenarFrontal();
+        llenarTrasera();
+        llenarVarilla();
     }
 
     /**
@@ -39,7 +78,7 @@ public class DCustomCraft extends javax.swing.JDialog {
         jLabel3 = new javax.swing.JLabel();
         cbTipoCuadro = new javax.swing.JComboBox<>();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tListon = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -50,14 +89,19 @@ public class DCustomCraft extends javax.swing.JDialog {
         tfLargo = new javax.swing.JTextField();
         tfAncho = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
-        cbVidrio = new javax.swing.JComboBox<>();
+        cbFrontal = new javax.swing.JComboBox<>();
         cbTapaTrasera = new javax.swing.JComboBox<>();
+        jPanel2 = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
-        jCheckBox1 = new javax.swing.JCheckBox();
         jCheckBox2 = new javax.swing.JCheckBox();
+        jCheckBox1 = new javax.swing.JCheckBox();
+        labelNroPedido = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        cbVarilla = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
+        bCotizar.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         bCotizar.setText("COTIZAR");
         bCotizar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -65,29 +109,29 @@ public class DCustomCraft extends javax.swing.JDialog {
             }
         });
 
-        jLabel2.setText("Nro. Pedido: 00010");
+        jLabel2.setText("Nro. Pedido:");
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel3.setText("TIPO DE CUADRO");
 
         cbTipoCuadro.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "PLANO", "BOX", "DOBLE MARCO", "DOBLE VIDRIO", "ENMARCADO" }));
+        cbTipoCuadro.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cbTipoCuadroItemStateChanged(evt);
+            }
+        });
+        cbTipoCuadro.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbTipoCuadroActionPerformed(evt);
+            }
+        });
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tListon.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "DESC", "GROSOR", "POFUNDIDAD", "MATERIAL"
+                "ID", "DESC", "PROF", "MATERIAL"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -98,12 +142,14 @@ public class DCustomCraft extends javax.swing.JDialog {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(jTable1);
-        if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(0).setResizable(false);
-            jTable1.getColumnModel().getColumn(1).setResizable(false);
-            jTable1.getColumnModel().getColumn(2).setResizable(false);
-            jTable1.getColumnModel().getColumn(3).setResizable(false);
+        jScrollPane1.setViewportView(tListon);
+        if (tListon.getColumnModel().getColumnCount() > 0) {
+            tListon.getColumnModel().getColumn(0).setResizable(false);
+            tListon.getColumnModel().getColumn(1).setResizable(false);
+            tListon.getColumnModel().getColumn(1).setPreferredWidth(280);
+            tListon.getColumnModel().getColumn(2).setResizable(false);
+            tListon.getColumnModel().getColumn(3).setResizable(false);
+            tListon.getColumnModel().getColumn(3).setPreferredWidth(130);
         }
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -123,6 +169,12 @@ public class DCustomCraft extends javax.swing.JDialog {
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel8.setText("Ancho:");
+
+        tfLargo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tfLargoActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -162,16 +214,22 @@ public class DCustomCraft extends javax.swing.JDialog {
         );
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel9.setText("VIDRIO:");
+        jLabel9.setText("FRONTAL:");
 
-        cbVidrio.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Sin Vidrio", "Vidrio 2mm", "Vidrio 3mm", "Acrílico 3mm" }));
+        cbFrontal.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Sin Frontal" }));
 
-        cbTapaTrasera.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Sin Tapa", "Nordex 3mm", "Trupan 3mm" }));
+        cbTapaTrasera.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Sin Tapa" }));
+        cbTapaTrasera.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbTapaTraseraActionPerformed(evt);
+            }
+        });
+
+        jPanel2.setBackground(new java.awt.Color(255, 102, 102));
+        jPanel2.setForeground(new java.awt.Color(255, 102, 102));
 
         jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jLabel10.setText("ADICIONALES:");
-
-        jCheckBox1.setText("LISTO PARA COLGAR");
 
         jCheckBox2.setText("PASPARTÚ");
         jCheckBox2.addActionListener(new java.awt.event.ActionListener() {
@@ -180,20 +238,55 @@ public class DCustomCraft extends javax.swing.JDialog {
             }
         });
 
+        jCheckBox1.setText("LISTO PARA COLGAR");
+        jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBox1ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel10)
+                    .addComponent(jCheckBox2)
+                    .addComponent(jCheckBox1))
+                .addContainerGap(250, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(19, 19, 19)
+                .addComponent(jLabel10)
+                .addGap(18, 18, 18)
+                .addComponent(jCheckBox2)
+                .addGap(64, 64, 64)
+                .addComponent(jCheckBox1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        labelNroPedido.setText("000000");
+
+        jLabel11.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel11.setText("VARILLA:");
+
+        cbVarilla.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Sin Varilla" }));
+        cbVarilla.setEnabled(false);
+        cbVarilla.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbVarillaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jSeparator1)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(797, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(bCotizar)
-                        .addGap(98, 98, 98))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(16, 16, 16))))
             .addGroup(layout.createSequentialGroup()
                 .addGap(34, 34, 34)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -209,7 +302,6 @@ public class DCustomCraft extends javax.swing.JDialog {
                                 .addComponent(cbTipoCuadro, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(75, 75, 75)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel10)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel5)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -218,16 +310,32 @@ public class DCustomCraft extends javax.swing.JDialog {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel9)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cbVidrio, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jCheckBox2)
-                            .addComponent(jCheckBox1))))
-                .addGap(0, 0, Short.MAX_VALUE))
+                                .addComponent(cbFrontal, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel11)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cbVarilla, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addGap(0, 48, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(labelNroPedido)
+                        .addGap(45, 45, 45))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(bCotizar)
+                        .addGap(448, 448, 448))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel2)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(labelNroPedido))
                 .addGap(3, 3, 3)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
@@ -239,56 +347,250 @@ public class DCustomCraft extends javax.swing.JDialog {
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel9)
-                            .addComponent(cbVidrio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(cbFrontal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(28, 28, 28)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)
                             .addComponent(cbTapaTrasera, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
+                .addGap(27, 27, 27)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(cbTipoCuadro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel10)))
+                        .addComponent(jLabel11)
+                        .addComponent(cbVarilla, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jCheckBox2))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(110, 110, 110)
-                        .addComponent(jCheckBox1)))
-                .addGap(103, 103, 103)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 244, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
                 .addComponent(bCotizar)
-                .addGap(78, 78, 78))
+                .addGap(47, 47, 47))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+    public void llenarListonTabla(){
+        Object[] listonArray=new Object[4];
+         modelo = (DefaultTableModel) tListon.getModel();
+        try{
+                String sSQL="SELECT id,des,prof,mat FROM liston";
+                Statement cn=conex.createStatement();
+                ResultSet res=cn.executeQuery(sSQL);
+                while(res.next()){
+                    listonArray[0]=res.getString("id");
+                    listonArray[1]=res.getString("des");
+                    listonArray[2]=res.getString("prof");
+                    listonArray[3]=res.getString("mat");
+                    modelo.addRow(listonArray);
+                }
+            }catch(SQLException e){
+                System.out.println(e);
+            }  
+    }
+    public void llenarFrontal(){
+        try{
+                String sSQL="SELECT des FROM Frontal";
+                Statement cn=conex.createStatement();
+                ResultSet res=cn.executeQuery(sSQL);
+                while(res.next()){
+                    cbFrontal.addItem(res.getString("des"));
+                }
+            }catch(SQLException e){
+                System.out.println(e);
+            }
+    }
+    public void llenarTrasera(){
+        try{
+                String sSQL="SELECT des FROM Trasera";
+                Statement cn=conex.createStatement();
+                ResultSet res=cn.executeQuery(sSQL);
+                while(res.next()){
+                    cbTapaTrasera.addItem(res.getString("des"));
+                }
+            }catch(SQLException e){
+                System.out.println(e);
+            }
+    }
+    public void llenarVarilla(){
+        try{
+                String sSQL="SELECT des FROM varilla";
+                Statement cn=conex.createStatement();
+                ResultSet res=cn.executeQuery(sSQL);
+                while(res.next()){
+                    cbVarilla.addItem(res.getString("des"));
+                }
+            }catch(SQLException e){
+                System.out.println(e);
+            }
+    }
+    //BUSCAR EN LA BASE DE DATOS LO SELECIONADO
+    public void datosCuadros(double largo, double ancho, String tipo,int liston,String frontal,String trasera,String varilla){
+        double costocm2_frontal=0,costocm2_trasera=0,costo_liston=0,prof_liston=0,largo_liston=0,largo_varilla=0,costocm_varilla=0;
+        String precioCuadro=null;
+        //LISTON
+        try{
+                System.out.println("liston");
+                String sSQL="SELECT largo,costo,prof FROM liston WHERE id='"+liston+"'";
+                Statement cn=conex.createStatement();
+                ResultSet res=cn.executeQuery(sSQL);
+                while(res.next()){
+                    largo_liston=Double.parseDouble(res.getString("largo"));
+                    costo_liston=Double.parseDouble(res.getString("costo"));
+                    prof_liston=Double.parseDouble(res.getString("prof"));
+                }
+            }catch(SQLException e){
+                System.out.println(e);
+        }
+        //FRONTAL
+        try{
+                            System.out.println("frontal");
+                String sSQL="SELECT id,costocm2 FROM frontal WHERE des='"+frontal+"'";
+                Statement cn=conex.createStatement();
+                ResultSet res=cn.executeQuery(sSQL);
+                while(res.next()){
+                    id_frontal=Integer.parseInt(res.getString("id"));
+                    costocm2_frontal=Double.parseDouble(res.getString("costocm2"));
+                }
+            }catch(SQLException e){
+                System.out.println(e);
+        }
+        //TRASERA
+        try{
+                            System.out.println("trasera");
+                String sSQL="SELECT id,costocm2 FROM trasera WHERE des='"+trasera+"'";
+                Statement cn=conex.createStatement();
+                ResultSet res=cn.executeQuery(sSQL);
+                while(res.next()){
+                    id_trasera=Integer.parseInt(res.getString("id"));
+                    costocm2_trasera=Double.parseDouble(res.getString("costocm2"));
+                }
+            }catch(SQLException e){
+                System.out.println(e);
+        }
+        //VARILLA
+        try{
+                            System.out.println("varilla");
+                String sSQL="SELECT id,costo,largo FROM varilla WHERE des='"+varilla+"'";
+                Statement cn=conex.createStatement();
+                ResultSet res=cn.executeQuery(sSQL);
+                while(res.next()){
+                    id_varilla=Integer.parseInt(res.getString("id"));
+                    costocm_varilla=Double.parseDouble(res.getString("costo"));
+                    System.out.println(costocm_varilla);
+                    largo_varilla=Double.parseDouble(res.getString("largo"));
+                }
+            }catch(SQLException e){
+                System.out.println(e);
+        }
+        v1=new Vidrio(costocm2_frontal);
+        n1=new Nordex (costocm2_trasera);
+        l1=new Liston (largo_liston,costo_liston,prof_liston);
+        va1=new Varilla(largo_varilla, costocm_varilla);
+    }
 
+    private void cotizacionCalculo(){
+        if(tipoCuadro.equals("PLANO")){
+            CuadroPlano cp1= new CuadroPlano(largo,ancho,l1,v1,n1);
+            precioCuadro=cp1.cuadroPlanoCosto();
+            id_cuadro=cp1.grabarCuadro(conex,largo,ancho,tipoCuadro,id_liston,id_frontal,id_trasera,precioCuadro);
+        }else if(tipoCuadro.equals("BOX")){
+            CuadroBox cb1=new CuadroBox(largo,ancho,l1,v1,n1,va1);
+            precioCuadro=cb1.cuadroBoxCosto();
+            id_cuadro=cb1.grabarCuadro(conex,largo,ancho,tipoCuadro,id_liston,id_frontal,id_trasera,id_varilla,precioCuadro);
+        }else if(tipoCuadro.equals("DOBLE MARCO")){
+            CuadroDobleM dm1=new CuadroDobleM(largo,ancho,l1,v1,n1,va1);
+            precioCuadro=dm1.cuadroDobleMCosto();
+            id_cuadro=dm1.grabarCuadro(conex,largo,ancho,tipoCuadro,id_liston,id_frontal,id_trasera,id_varilla,precioCuadro);
+        }else if(tipoCuadro.equals("DOBLE VIDRIO")){
+            CuadroDobleV dv1=new CuadroDobleV(largo,ancho,l1,v1,n1,va1);
+            precioCuadro=dv1.cuadroDobleVCosto();
+            id_cuadro=dv1.grabarCuadro(conex,largo,ancho,tipoCuadro,id_liston,id_frontal,id_trasera,id_varilla,precioCuadro);
+            //System.out.println(largo+" "+ancho+" "+tipoCuadro+" "+id_frontal+" "+id_trasera+" "+id_varilla+" "+precioCuadro);
+        }else{
+            System.out.println("ERROR EN COTIZACION CUADROS");
+        }
+    }
+    /*
+    private int idUltimoCuadro(){
+        int idCuadro=-1;
+        try{
+                System.out.println("ID DEL ULTIMO CUADRO AÑADIDO");
+                //String sSQL="SELECT MAX(c.id_cuadro) AS id_cuadro FROM vta_det vd JOIN cuadro c ON vd.cuadro=c.id_cuadro JOIN pedido p ON vd.pedido=p.id_pedido WHERE p.N_PEDIDO='"+pedido.getN_pedido()+"';";
+                String sSQL="SELECT id_cuadro FROM cuadro WHERE id_cuadro=(SELECT MAX(id_cuadro) FROM cuadro)";
+                Statement cn=conex.createStatement();
+                ResultSet res=cn.executeQuery(sSQL);
+                while(res.next()){
+                    idCuadro=Integer.parseInt(res.getString("id_cuadro"));
+                }
+            }catch(SQLException e){
+                System.out.println(e);
+        }
+        return idCuadro;
+    }*/
+    
+    
     private void bCotizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCotizarActionPerformed
         // TODO add your handling code here:
-        double largo=Double.parseDouble(tfLargo.getText());
-        double ancho=Double.parseDouble(tfAncho.getText());
-        int tipoCuadro=cbTipoCuadro.getSelectedIndex();
-        int vidrio=cbVidrio.getSelectedIndex();
-        int tapa=cbTapaTrasera.getSelectedIndex();
-        Liston l1=new Liston(320,12,2.5,1); //prueba
-        Cuadro c1=new Cuadro(largo,ancho,l1);
-        //Vidrio v1=new Vidrio();
-        if (tipoCuadro==0){
-          //  CuadroPlano cp=new CuadroPlano(c1,)
+        largo=Double.parseDouble(tfLargo.getText());
+        ancho=Double.parseDouble(tfAncho.getText());
+        tipoCuadro=(String) cbTipoCuadro.getSelectedItem();
+        String frontal=(String) cbFrontal.getSelectedItem();
+        String tapa=(String) cbTapaTrasera.getSelectedItem();
+        String varilla=(String) cbVarilla.getSelectedItem();
+        id_liston=Integer.parseInt((String) tListon.getValueAt(tListon.getSelectedRow(),0));
+        System.out.println(largo);
+        System.out.println(ancho);
+        System.out.println("FUNCION----");
+        
+        if(tipoCuadro.equals("PLANO") || tipoCuadro.equals("ENMARCADO")){
+            datosCuadros(largo,ancho,tipoCuadro,id_liston,frontal,tapa,null);
+        }else{
+            datosCuadros(largo,ancho,tipoCuadro,id_liston,frontal,tapa,varilla);
         }
-        JOptionPane.showMessageDialog(null,vidrio+ " : Esto es un mensaje de información.");
-        //this.dispose();
+        cotizacionCalculo();
+        pedido.addCuadro(id_cuadro);
+        dvP.actualizarTablaCuadros();
+        
+        
+        this.dispose();
     }//GEN-LAST:event_bCotizarActionPerformed
 
     private void jCheckBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jCheckBox2ActionPerformed
+
+    private void tfLargoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfLargoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfLargoActionPerformed
+
+    private void cbTipoCuadroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbTipoCuadroActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbTipoCuadroActionPerformed
+
+    private void cbTapaTraseraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbTapaTraseraActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbTapaTraseraActionPerformed
+
+    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jCheckBox1ActionPerformed
+
+    private void cbVarillaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbVarillaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbVarillaActionPerformed
+
+    private void cbTipoCuadroItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbTipoCuadroItemStateChanged
+        // TODO add your handling code here
+        if(cbTipoCuadro.getSelectedIndex()>=1 && cbTipoCuadro.getSelectedIndex()<=3){
+            cbVarilla.setEnabled(true);
+        }
+        else{
+            cbVarilla.setEnabled(false);
+        }
+    }//GEN-LAST:event_cbTipoCuadroItemStateChanged
 
     /**
      * @param args the command line arguments
@@ -316,11 +618,11 @@ public class DCustomCraft extends javax.swing.JDialog {
             java.util.logging.Logger.getLogger(DCustomCraft.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-
+        Pedidos p1=new Pedidos();
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                DCustomCraft dialog = new DCustomCraft(new javax.swing.JFrame(), true);
+                DCustomCraft dialog = new DCustomCraft(new javax.swing.JFrame(), true,p1,dvPadre);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -331,18 +633,19 @@ public class DCustomCraft extends javax.swing.JDialog {
             }
         });
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup BtapaTrasera;
     private javax.swing.ButtonGroup Bvidrios;
     private javax.swing.JButton bCotizar;
+    private javax.swing.JComboBox<String> cbFrontal;
     private javax.swing.JComboBox<String> cbTapaTrasera;
     private javax.swing.JComboBox<String> cbTipoCuadro;
-    private javax.swing.JComboBox<String> cbVidrio;
+    private javax.swing.JComboBox<String> cbVarilla;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JCheckBox jCheckBox2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -352,9 +655,11 @@ public class DCustomCraft extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JLabel labelNroPedido;
+    private javax.swing.JTable tListon;
     private javax.swing.JTextField tfAncho;
     private javax.swing.JTextField tfLargo;
     // End of variables declaration//GEN-END:variables

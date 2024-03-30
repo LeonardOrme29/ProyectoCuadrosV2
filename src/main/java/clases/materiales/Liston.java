@@ -5,11 +5,10 @@ public class Liston {
     private double precio_costo;
     private double marco_tam_cm;
     private double profundidad;
-    public Liston(double largo, double precio_costo, double marco_tam_cm, double profundidad){
+    public Liston(double largo, double precio_costo, double marco_tam_cm){
         this.largo=largo;
         this.precio_costo=precio_costo;
         this.marco_tam_cm=marco_tam_cm;
-        this.profundidad=profundidad;
     }
     //GETTERS
     public double getLargo(){

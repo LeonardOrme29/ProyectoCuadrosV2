@@ -4,10 +4,9 @@ public class Varilla {
     private double largo; 
     private double precio_costo;
     private double profundidad;
-    public Varilla(double largo,double precio_costo,double profundidad){
+    public Varilla(double largo,double precio_costo){
         this.largo=largo;
         this.precio_costo=precio_costo;
-        this.profundidad=profundidad;
     }
     //GETTERS
     public double getLargo(){

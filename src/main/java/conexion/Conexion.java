@@ -12,29 +12,23 @@ import java.sql.SQLException;
  * @author leonardo.ormeno
  */
 public class Conexion {
-    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/cuadros";
+    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/prueba_cuadros";
     private static final String USER = "root";
     private static final String PASSWORD = "";
-    
-    public static Connection getConnection() throws SQLException {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            return DriverManager.getConnection(JDBC_URL, USER, PASSWORD);
-        } catch (ClassNotFoundException | SQLException e) {
-            throw new SQLException("Error al establecer la conexión a la base de datos", e);
-        }
+    private Connection con=null;
+    public Conexion(){
+        //conectar();
     }
-    
-    public static void main(String[] args) {
-        try (Connection connection = getConnection()) {
-            if (connection != null) {
-                System.out.println("Conexión exitosa a la base de datos.");
-            } else {
-                System.out.println("No se pudo establecer la conexión a la base de datos.");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+
+    public Connection conectar(){
+        try{
+            con=DriverManager.getConnection(JDBC_URL, USER, PASSWORD);
+            System.err.println("SE CONECTO");
+        }catch(Exception e){
+            System.out.println("ERROR AL CONECTAR"+" "+e);
         }
+        return con;
     }
+
 }
 
