@@ -11,8 +11,8 @@ import javax.swing.JOptionPane;
 
 public class Cuadro {
     private String tipoC;
-    private double largo;
-    private double ancho;
+    protected double largo;
+    protected double ancho;
     private float profundidad;
     protected Liston li;
     protected Clavo clavo;
@@ -148,47 +148,6 @@ public class Cuadro {
         }
         return idCuadro;
     }
-    
-    /*
-    public boolean grabarCuadro(Connection conex,double largo, double ancho,String tipo,int liston,int frontal,int trasera,double precio){
-        System.out.println(largo);
-        System.out.println(ancho);
-        String sSQL = "INSERT INTO cuadro (largo, ancho, tipo, liston, frontal, trasera, precio,custom,pedido_estado) VALUES ("+largo+","+ancho+",'"+tipo+"',"+liston+","+frontal+","+trasera+","+precio+",'S','P')";
-        try {
-            Statement st = conex.createStatement();
-            int rowsAffected = st.executeUpdate(sSQL);
-            if (rowsAffected > 0) {
-                System.out.println("El cuadro se guardo correctamente");
-                return true;//VERIFICADOR QUE SI SE CREO UN REGISTRO 
-            } else {
-                JOptionPane.showMessageDialog(null, "No se pudo realizar el registro");
-            }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, e.getMessage());
-            e.printStackTrace();
-        }
-        return false;
-    }
-    
-    public void grabarCuadro(Connection conex,double largo, double ancho,String tipo,int liston,int frontal,int trasera,int varilla,double precio){
-        System.out.println(largo);
-        System.out.println(ancho);
-        String sSQL = "INSERT INTO cuadro (largo, ancho, tipo, liston, frontal, trasera,varilla, precio,custom,pedido_estado) VALUES ("+largo+","+ancho+",'"+tipo+"',"+liston+","+frontal+","+trasera+","+varilla+","+precio+",'S','P')";
-        try {
-            Statement st = conex.createStatement();
-            int rowsAffected = st.executeUpdate(sSQL);
-            if (rowsAffected > 0) {
-                System.out.println("El cuadro se guardo correctamente");
-                
-            } else {
-                JOptionPane.showMessageDialog(null, "No se pudo realizar el registro");
-            }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, e.getMessage());
-            JOptionPane.showMessageDialog(null, "No se pudo realizar el registro");
-            e.printStackTrace();
-        }
-    }*/
     //Main
     public static void main(String[] args) {
         Liston li=new Liston(320, 12.50, 1.5);

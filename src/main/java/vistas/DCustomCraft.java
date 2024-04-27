@@ -86,8 +86,10 @@ public class DCustomCraft extends javax.swing.JDialog {
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        tfLargo = new javax.swing.JTextField();
-        tfAncho = new javax.swing.JTextField();
+        tfLargo = new javax.swing.JFormattedTextField();
+        tfAncho = new javax.swing.JFormattedTextField();
+        jTextField1 = new javax.swing.JTextField();
+        jTextField2 = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         cbFrontal = new javax.swing.JComboBox<>();
         cbTapaTrasera = new javax.swing.JComboBox<>();
@@ -98,6 +100,10 @@ public class DCustomCraft extends javax.swing.JDialog {
         labelNroPedido = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         cbVarilla = new javax.swing.JComboBox<>();
+        checkVarilla = new javax.swing.JCheckBox();
+        checkTrasera = new javax.swing.JCheckBox();
+        checkFrontal = new javax.swing.JCheckBox();
+        jLabel12 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -170,11 +176,23 @@ public class DCustomCraft extends javax.swing.JDialog {
         jLabel8.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel8.setText("Ancho:");
 
+        tfLargo.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.0"))));
         tfLargo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tfLargoActionPerformed(evt);
             }
         });
+
+        tfAncho.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.0"))));
+        tfAncho.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tfAnchoActionPerformed(evt);
+            }
+        });
+
+        jTextField1.setText("jTextField1");
+
+        jTextField2.setText("jTextField2");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -193,7 +211,11 @@ public class DCustomCraft extends javax.swing.JDialog {
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel7)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(tfLargo, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(tfLargo, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(53, 53, 53)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(jLabel6))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -205,20 +227,26 @@ public class DCustomCraft extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
-                    .addComponent(tfLargo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tfLargo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel8)
-                    .addComponent(tfAncho, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(18, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(tfAncho, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel9.setText("FRONTAL:");
 
-        cbFrontal.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Sin Frontal" }));
+        cbFrontal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbFrontalActionPerformed(evt);
+            }
+        });
 
-        cbTapaTrasera.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Sin Tapa" }));
         cbTapaTrasera.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbTapaTraseraActionPerformed(evt);
@@ -282,6 +310,27 @@ public class DCustomCraft extends javax.swing.JDialog {
             }
         });
 
+        checkVarilla.setSelected(true);
+        checkVarilla.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkVarillaActionPerformed(evt);
+            }
+        });
+
+        checkTrasera.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkTraseraActionPerformed(evt);
+            }
+        });
+
+        checkFrontal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkFrontalActionPerformed(evt);
+            }
+        });
+
+        jLabel12.setText("ON/OFF");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -300,23 +349,41 @@ public class DCustomCraft extends javax.swing.JDialog {
                                 .addComponent(jLabel3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(cbTipoCuadro, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(75, 75, 75)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel5)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cbTapaTrasera, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jLabel4)
+                                .addGap(75, 75, 75)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel4)
+                                        .addGap(88, 88, 88)
+                                        .addComponent(jLabel12))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel9)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(cbFrontal, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(51, 51, 51)
+                                                .addComponent(checkFrontal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                                .addGroup(layout.createSequentialGroup()
+                                                    .addComponent(jLabel11)
+                                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                    .addComponent(cbVarilla, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                    .addComponent(checkVarilla))
+                                                .addGroup(layout.createSequentialGroup()
+                                                    .addComponent(jLabel5)
+                                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                    .addComponent(cbTapaTrasera, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                    .addGap(18, 18, 18)
+                                                    .addComponent(checkTrasera))))
+                                        .addGap(15, 15, 15)))
+                                .addGap(81, 81, 81))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel9)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cbFrontal, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel11)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cbVarilla, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addGap(0, 48, Short.MAX_VALUE))
+                                .addGap(58, 58, 58)
+                                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addGap(65, 65, 65))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -343,29 +410,35 @@ public class DCustomCraft extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel4)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel12))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel9)
-                            .addComponent(cbFrontal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(cbFrontal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(checkFrontal, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(28, 28, 28)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel5)
-                            .addComponent(cbTapaTrasera, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(checkTrasera, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel5)
+                                .addComponent(cbTapaTrasera, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addGap(27, 27, 27)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(cbTipoCuadro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel11)
-                        .addComponent(cbVarilla, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(cbVarilla, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(checkVarilla, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 244, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
                 .addComponent(bCotizar)
                 .addGap(47, 47, 47))
         );
@@ -426,145 +499,41 @@ public class DCustomCraft extends javax.swing.JDialog {
                 System.out.println(e);
             }
     }
-    //BUSCAR EN LA BASE DE DATOS LO SELECIONADO
-    public void datosCuadros(double largo, double ancho, String tipo,int liston,String frontal,String trasera,String varilla){
-        double costocm2_frontal=0,costocm2_trasera=0,costo_liston=0,prof_liston=0,largo_liston=0,largo_varilla=0,costocm_varilla=0;
-        String precioCuadro=null;
-        //LISTON
-        try{
-                System.out.println("liston");
-                String sSQL="SELECT largo,costo,prof FROM liston WHERE id='"+liston+"'";
-                Statement cn=conex.createStatement();
-                ResultSet res=cn.executeQuery(sSQL);
-                while(res.next()){
-                    largo_liston=Double.parseDouble(res.getString("largo"));
-                    costo_liston=Double.parseDouble(res.getString("costo"));
-                    prof_liston=Double.parseDouble(res.getString("prof"));
-                }
-            }catch(SQLException e){
-                System.out.println(e);
-        }
-        //FRONTAL
-        try{
-                            System.out.println("frontal");
-                String sSQL="SELECT id,costocm2 FROM frontal WHERE des='"+frontal+"'";
-                Statement cn=conex.createStatement();
-                ResultSet res=cn.executeQuery(sSQL);
-                while(res.next()){
-                    id_frontal=Integer.parseInt(res.getString("id"));
-                    costocm2_frontal=Double.parseDouble(res.getString("costocm2"));
-                }
-            }catch(SQLException e){
-                System.out.println(e);
-        }
-        //TRASERA
-        try{
-                            System.out.println("trasera");
-                String sSQL="SELECT id,costocm2 FROM trasera WHERE des='"+trasera+"'";
-                Statement cn=conex.createStatement();
-                ResultSet res=cn.executeQuery(sSQL);
-                while(res.next()){
-                    id_trasera=Integer.parseInt(res.getString("id"));
-                    costocm2_trasera=Double.parseDouble(res.getString("costocm2"));
-                }
-            }catch(SQLException e){
-                System.out.println(e);
-        }
-        //VARILLA
-        try{
-                            System.out.println("varilla");
-                String sSQL="SELECT id,costo,largo FROM varilla WHERE des='"+varilla+"'";
-                Statement cn=conex.createStatement();
-                ResultSet res=cn.executeQuery(sSQL);
-                while(res.next()){
-                    id_varilla=Integer.parseInt(res.getString("id"));
-                    costocm_varilla=Double.parseDouble(res.getString("costo"));
-                    System.out.println(costocm_varilla);
-                    largo_varilla=Double.parseDouble(res.getString("largo"));
-                }
-            }catch(SQLException e){
-                System.out.println(e);
-        }
-        v1=new Vidrio(costocm2_frontal);
-        n1=new Nordex (costocm2_trasera);
-        l1=new Liston (largo_liston,costo_liston,prof_liston);
-        va1=new Varilla(largo_varilla, costocm_varilla);
-    }
-
-    private void cotizacionCalculo(){
-        if(tipoCuadro.equals("PLANO")){
-            CuadroPlano cp1= new CuadroPlano(largo,ancho,l1,v1,n1);
-            precioCuadro=cp1.cuadroPlanoCosto();
-            id_cuadro=cp1.grabarCuadro(conex,largo,ancho,tipoCuadro,id_liston,id_frontal,id_trasera,precioCuadro);
-        }else if(tipoCuadro.equals("BOX")){
-            CuadroBox cb1=new CuadroBox(largo,ancho,l1,v1,n1,va1);
-            precioCuadro=cb1.cuadroBoxCosto();
-            id_cuadro=cb1.grabarCuadro(conex,largo,ancho,tipoCuadro,id_liston,id_frontal,id_trasera,id_varilla,precioCuadro);
-        }else if(tipoCuadro.equals("DOBLE MARCO")){
-            CuadroDobleM dm1=new CuadroDobleM(largo,ancho,l1,v1,n1,va1);
-            precioCuadro=dm1.cuadroDobleMCosto();
-            id_cuadro=dm1.grabarCuadro(conex,largo,ancho,tipoCuadro,id_liston,id_frontal,id_trasera,id_varilla,precioCuadro);
-        }else if(tipoCuadro.equals("DOBLE VIDRIO")){
-            CuadroDobleV dv1=new CuadroDobleV(largo,ancho,l1,v1,n1,va1);
-            precioCuadro=dv1.cuadroDobleVCosto();
-            id_cuadro=dv1.grabarCuadro(conex,largo,ancho,tipoCuadro,id_liston,id_frontal,id_trasera,id_varilla,precioCuadro);
-            //System.out.println(largo+" "+ancho+" "+tipoCuadro+" "+id_frontal+" "+id_trasera+" "+id_varilla+" "+precioCuadro);
-        }else{
-            System.out.println("ERROR EN COTIZACION CUADROS");
-        }
-    }
-    /*
-    private int idUltimoCuadro(){
-        int idCuadro=-1;
-        try{
-                System.out.println("ID DEL ULTIMO CUADRO AÑADIDO");
-                //String sSQL="SELECT MAX(c.id_cuadro) AS id_cuadro FROM vta_det vd JOIN cuadro c ON vd.cuadro=c.id_cuadro JOIN pedido p ON vd.pedido=p.id_pedido WHERE p.N_PEDIDO='"+pedido.getN_pedido()+"';";
-                String sSQL="SELECT id_cuadro FROM cuadro WHERE id_cuadro=(SELECT MAX(id_cuadro) FROM cuadro)";
-                Statement cn=conex.createStatement();
-                ResultSet res=cn.executeQuery(sSQL);
-                while(res.next()){
-                    idCuadro=Integer.parseInt(res.getString("id_cuadro"));
-                }
-            }catch(SQLException e){
-                System.out.println(e);
-        }
-        return idCuadro;
-    }*/
-    
     
     private void bCotizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCotizarActionPerformed
         // TODO add your handling code here:
         largo=Double.parseDouble(tfLargo.getText());
         ancho=Double.parseDouble(tfAncho.getText());
         tipoCuadro=(String) cbTipoCuadro.getSelectedItem();
-        String frontal=(String) cbFrontal.getSelectedItem();
-        String tapa=(String) cbTapaTrasera.getSelectedItem();
-        String varilla=(String) cbVarilla.getSelectedItem();
         id_liston=Integer.parseInt((String) tListon.getValueAt(tListon.getSelectedRow(),0));
-        System.out.println(largo);
-        System.out.println(ancho);
-        System.out.println("FUNCION----");
-        
-        if(tipoCuadro.equals("PLANO") || tipoCuadro.equals("ENMARCADO")){
-            datosCuadros(largo,ancho,tipoCuadro,id_liston,frontal,tapa,null);
-        }else{
-            datosCuadros(largo,ancho,tipoCuadro,id_liston,frontal,tapa,varilla);
+        String frontal=null,trasera=null,varilla=null;
+        System.out.println(checkFrontal.isSelected());
+        System.out.println(checkTrasera.isSelected());
+        System.out.println(checkVarilla.isSelected());
+        if(checkFrontal.isSelected()==false){
+            frontal=(String) cbFrontal.getSelectedItem();
         }
-        cotizacionCalculo();
-        pedido.addCuadro(id_cuadro);
+        if(checkTrasera.isSelected()==false){
+            trasera=(String) cbTapaTrasera.getSelectedItem();
+        }
+        if(checkVarilla.isSelected()==false){
+            varilla=(String) cbVarilla.getSelectedItem();
+        }
+        System.out.println("----------EMPIEZA CUADRO CONTROLLER-----------");
+        CuadroController cc1=new CuadroController(conex,largo,ancho,tipoCuadro,id_liston,frontal,trasera,varilla);
+        cc1.precio_costo_cuadro();
+        JOptionPane.showMessageDialog(null,"SE HA COTIZADO CORRECTAMENTE PRECIO COSTO: " + cc1.getPrecioCuadro());
+        cc1.grabarCuadro();
+        JOptionPane.showMessageDialog(null,"SE HA GRABADO CORRECTAMENTE EL PEDIDO ID: " + cc1.getIdCuadro());
+        pedido.crearPedido(pedido.getN_pedido());
+        pedido.addCuadro(cc1.getIdCuadro());
         dvP.actualizarTablaCuadros();
-        
-        
         this.dispose();
     }//GEN-LAST:event_bCotizarActionPerformed
 
     private void jCheckBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jCheckBox2ActionPerformed
-
-    private void tfLargoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfLargoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_tfLargoActionPerformed
 
     private void cbTipoCuadroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbTipoCuadroActionPerformed
         // TODO add your handling code here:
@@ -586,11 +555,40 @@ public class DCustomCraft extends javax.swing.JDialog {
         // TODO add your handling code here
         if(cbTipoCuadro.getSelectedIndex()>=1 && cbTipoCuadro.getSelectedIndex()<=3){
             cbVarilla.setEnabled(true);
+            checkVarilla.setSelected(false);
         }
         else{
             cbVarilla.setEnabled(false);
+            checkVarilla.setSelected(true);
         }
     }//GEN-LAST:event_cbTipoCuadroItemStateChanged
+
+    private void tfAnchoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfAnchoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfAnchoActionPerformed
+
+    private void tfLargoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfLargoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfLargoActionPerformed
+
+    private void checkVarillaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkVarillaActionPerformed
+        // TODO add your handling code here:
+        cbVarilla.setEnabled(!checkVarilla.isSelected());
+    }//GEN-LAST:event_checkVarillaActionPerformed
+
+    private void checkTraseraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkTraseraActionPerformed
+        // TODO add your handling code here:
+        cbTapaTrasera.setEnabled(!checkTrasera.isSelected());
+    }//GEN-LAST:event_checkTraseraActionPerformed
+
+    private void cbFrontalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbFrontalActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbFrontalActionPerformed
+
+    private void checkFrontalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkFrontalActionPerformed
+        // TODO add your handling code here:
+        cbFrontal.setEnabled(!checkFrontal.isSelected());
+    }//GEN-LAST:event_checkFrontalActionPerformed
 
     /**
      * @param args the command line arguments
@@ -641,11 +639,15 @@ public class DCustomCraft extends javax.swing.JDialog {
     private javax.swing.JComboBox<String> cbTapaTrasera;
     private javax.swing.JComboBox<String> cbTipoCuadro;
     private javax.swing.JComboBox<String> cbVarilla;
+    private javax.swing.JCheckBox checkFrontal;
+    private javax.swing.JCheckBox checkTrasera;
+    private javax.swing.JCheckBox checkVarilla;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JCheckBox jCheckBox2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -658,9 +660,11 @@ public class DCustomCraft extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField2;
     private javax.swing.JLabel labelNroPedido;
     private javax.swing.JTable tListon;
-    private javax.swing.JTextField tfAncho;
-    private javax.swing.JTextField tfLargo;
+    private javax.swing.JFormattedTextField tfAncho;
+    private javax.swing.JFormattedTextField tfLargo;
     // End of variables declaration//GEN-END:variables
 }

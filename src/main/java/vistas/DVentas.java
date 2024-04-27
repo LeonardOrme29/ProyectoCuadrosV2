@@ -13,6 +13,10 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import logica.*;
 import alertasVistas.*;
+import java.sql.CallableStatement;
+import java.sql.Types;
+import java.text.DecimalFormat;
+import javax.swing.SwingUtilities;
 /**
  *
  * @author leonardo.ormeno
@@ -36,7 +40,7 @@ public class DVentas extends javax.swing.JDialog {
         pedido=p1;
         String nroPedido=pedido.calcNPedido();
         System.out.println(nroPedido);
-        pedido.crearPedido(nroPedido);
+        //pedido.crearPedido(nroPedido); -> se pasa a cuando se cotiza un cuadro en DCustomCraft (boton cotizar)
         pedido_label.setText(pedido.getN_pedido());
         tmodelo = (DefaultTableModel) tPedido.getModel();
         //actualizarTablaCuadros();
@@ -57,14 +61,17 @@ public class DVentas extends javax.swing.JDialog {
         jBuscadorVenta = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         pedido_label = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tPedido = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
+        bBoleta = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        bInfoProducto = new javax.swing.JButton();
+        bEliminarPedido = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
-        jLabel4 = new javax.swing.JLabel();
+        labelPrecio = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
         bCantidad = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -87,6 +94,12 @@ public class DVentas extends javax.swing.JDialog {
         pedido_label.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         pedido_label.setText("0000101");
 
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel4.setText("Cliente:");
+
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel5.setText("No identificado");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -97,18 +110,30 @@ public class DVentas extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jBuscadorVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 403, Short.MAX_VALUE)
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pedido_label)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(pedido_label))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(37, 37, 37))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                        .addComponent(pedido_label)
-                        .addComponent(jLabel2))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel5))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                            .addComponent(pedido_label)
+                            .addComponent(jLabel2)))
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(javax.swing.GroupLayout.Alignment.CENTER, jPanel2Layout.createSequentialGroup()
                             .addGap(25, 25, 25)
@@ -128,7 +153,7 @@ public class DVentas extends javax.swing.JDialog {
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Float.class, java.lang.Float.class, java.lang.Float.class
             };
             boolean[] canEdit = new boolean [] {
                 false, false, false, false, false, false
@@ -144,12 +169,14 @@ public class DVentas extends javax.swing.JDialog {
         });
         jScrollPane1.setViewportView(tPedido);
         if (tPedido.getColumnModel().getColumnCount() > 0) {
-            tPedido.getColumnModel().getColumn(0).setMinWidth(400);
-            tPedido.getColumnModel().getColumn(0).setPreferredWidth(400);
-            tPedido.getColumnModel().getColumn(0).setMaxWidth(450);
-            tPedido.getColumnModel().getColumn(1).setMinWidth(50);
+            tPedido.getColumnModel().getColumn(0).setMinWidth(600);
+            tPedido.getColumnModel().getColumn(0).setPreferredWidth(600);
+            tPedido.getColumnModel().getColumn(0).setMaxWidth(650);
+            tPedido.getColumnModel().getColumn(1).setMinWidth(150);
+            tPedido.getColumnModel().getColumn(1).setPreferredWidth(150);
+            tPedido.getColumnModel().getColumn(1).setMaxWidth(150);
             tPedido.getColumnModel().getColumn(2).setResizable(false);
-            tPedido.getColumnModel().getColumn(2).setPreferredWidth(1);
+            tPedido.getColumnModel().getColumn(2).setPreferredWidth(60);
             tPedido.getColumnModel().getColumn(3).setResizable(false);
             tPedido.getColumnModel().getColumn(3).setPreferredWidth(1);
             tPedido.getColumnModel().getColumn(4).setResizable(false);
@@ -158,11 +185,11 @@ public class DVentas extends javax.swing.JDialog {
             tPedido.getColumnModel().getColumn(5).setPreferredWidth(2);
         }
 
-        jButton1.setFont(new java.awt.Font("Segoe UI Semibold", 0, 18)); // NOI18N
-        jButton1.setText("BOLETA");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        bBoleta.setFont(new java.awt.Font("Segoe UI Semibold", 0, 18)); // NOI18N
+        bBoleta.setText("BOLETA");
+        bBoleta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                bBoletaActionPerformed(evt);
             }
         });
 
@@ -178,25 +205,28 @@ public class DVentas extends javax.swing.JDialog {
             }
         });
 
-        jButton2.setText("Info Producto");
-        jButton2.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        jButton2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton2.setInheritsPopupMenu(true);
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        bInfoProducto.setText("Info Producto");
+        bInfoProducto.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        bInfoProducto.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        bInfoProducto.setInheritsPopupMenu(true);
+        bInfoProducto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                bInfoProductoActionPerformed(evt);
             }
         });
 
-        jButton4.setText("Eliminar Producto");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        bEliminarPedido.setText("Eliminar Producto");
+        bEliminarPedido.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                bEliminarPedidoActionPerformed(evt);
             }
         });
 
-        jLabel4.setFont(new java.awt.Font("Segoe UI Semibold", 0, 18)); // NOI18N
-        jLabel4.setText("S/99.99");
+        labelPrecio.setFont(new java.awt.Font("Segoe UI Semibold", 0, 18)); // NOI18N
+        labelPrecio.setText("99.99");
+
+        jLabel3.setFont(new java.awt.Font("Segoe UI Semibold", 0, 18)); // NOI18N
+        jLabel3.setText("S/");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -204,14 +234,18 @@ public class DVentas extends javax.swing.JDialog {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel4)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(labelPrecio)
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(16, 16, 16)
-                .addComponent(jLabel4)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(labelPrecio)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(18, Short.MAX_VALUE))
         );
 
@@ -233,13 +267,13 @@ public class DVentas extends javax.swing.JDialog {
                         .addGap(15, 15, 15)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(bBoleta, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE)
                                 .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(326, 326, 326)
-                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(bInfoProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(53, 53, 53)
-                                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(bEliminarPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(40, 40, 40)
                                 .addComponent(bCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jScrollPane1)
@@ -258,10 +292,10 @@ public class DVentas extends javax.swing.JDialog {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(bBoleta, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(bEliminarPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(bInfoProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(bCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(56, 56, 56))
         );
@@ -292,7 +326,7 @@ public class DVentas extends javax.swing.JDialog {
         System.out.println("Fin de la limpieza de la tabla");
         try {
             System.out.println("rellenar tabla");
-            String sSQL = "SELECT vd.id_vta_det,c.des, c.tipo, c.precio, c.tam, vd.cant,vd.pedido_precio FROM pedido p JOIN vta_det vd ON p.id_pedido = vd.pedido JOIN cuadro c ON vd.cuadro = c.id_cuadro WHERE p.N_PEDIDO = '"+pedido.getN_pedido()+"';";
+            String sSQL = "SELECT vd.id_vta_det,c.des, c.tipo, c.precio, c.tam, vd.cant,vd.pedido_precio FROM pedido p JOIN vta_det vd ON p.id_pedido = vd.pedido JOIN cuadro c ON vd.cuadro = c.id_cuadro WHERE p.N_PEDIDO = '"+pedido.getN_pedido()+"' AND vd.est_ped='S';";
             Statement cn = conex.createStatement();
             ResultSet res = cn.executeQuery(sSQL);
             ArrayList<Integer> idP = new ArrayList<>();
@@ -303,9 +337,9 @@ public class DVentas extends javax.swing.JDialog {
                 fila.add(res.getString("des"));
                 fila.add(res.getString("tam"));
                 fila.add(res.getString("tipo"));
-                fila.add(res.getString("cant"));
-                fila.add(res.getString("precio"));
-                fila.add(res.getString("pedido_precio"));
+                fila.add((Object) res.getDouble("cant"));
+                fila.add((Object) res.getDouble("precio"));
+                fila.add((Object) res.getDouble("pedido_precio"));
                 // Agregar la fila al modelo de tabla
                 tmodelo.addRow(fila.toArray());
                 idPedido=idP;
@@ -313,21 +347,115 @@ public class DVentas extends javax.swing.JDialog {
         } catch (SQLException e) {
             System.out.println(e);
         }
+        precioActualizar();
         //tPedido.setVisible(true);
     }
     
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    private void bEliminarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bEliminarPedidoActionPerformed
         // TODO add your handling code here:
-        
-    }//GEN-LAST:event_jButton4ActionPerformed
+        int id=-1;
+        try{
+            id=idPedido.get(tPedido.getSelectedRow());
+            try{
+            String procedimiento="{ CALL vta_det_pedido_estado(?) }";
+                try (CallableStatement cs = conex.prepareCall(procedimiento)) {
+                    // Establecer el parámetro del procedimiento
+                    cs.setInt(1, id);
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+                    // Ejecutar el procedimiento
+                    ResultSet rs = cs.executeQuery();
+                    JOptionPane.showMessageDialog(null, "SE ELIMINO EL PEDIDO");
+                }
+            }catch (SQLException e) {
+                System.out.println(e);
+            }
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, "SELECIONE UN CUADRO");
+        }
+        actualizarTablaCuadros();
+    }//GEN-LAST:event_bEliminarPedidoActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void bInfoProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bInfoProductoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+        int id=-1;
+        try{
+            id=idPedido.get(tPedido.getSelectedRow());
+            try{
+            String procedimiento="{ CALL pedido_cuadro_detalles(?) }";
+                try (CallableStatement cs = conex.prepareCall(procedimiento)) {
+                    // Establecer el parámetro del procedimiento
+                    cs.setInt(1, id);
+
+                    // Ejecutar el procedimiento
+                    ResultSet rs = cs.executeQuery();
+
+                    // Procesar los resultados
+                    while (rs.next()) {
+                        // Aquí puedes procesar los resultados como desees
+                        // Por ejemplo, imprimir los valores en la consola
+                        System.out.println("Largo: " + rs.getDouble("largo"));
+                        System.out.println("Ancho: " + rs.getDouble("ancho"));
+                        System.out.println("Tipo: " + rs.getString("tipo"));
+                        System.out.println("Liston: " + rs.getString("ldes"));
+                        System.out.println("Frontal: " + rs.getString("fdes"));
+                        System.out.println("Tapa: " + rs.getString("tdes"));
+                        System.out.println("Varilla: " + rs.getString("vnombre"));
+                        JOptionPane.showMessageDialog(
+                        this, 
+                        "<html><body><p style='width: 200px;'>"+"Largo: " + rs.getDouble("largo")+" CM</p>"
+                                + "<p style='width: 200px;'>"+"Ancho: " + rs.getDouble("ancho")+" CM</p>"
+                                        + "<p style='width: 200px;'>"+"Tipo: " + rs.getString("tipo")+"</p>"
+                                                + "<p style='width: 200px;'>"+"Liston: " + rs.getString("ldes")+"</p>"
+                                                        + "<p style='width: 200px;'>"+"Frontal: " + rs.getString("fdes")+"</p>"
+                                                                + "<p style='width: 200px;'>"+"Tapa: " + rs.getString("tdes")+"</p>"
+                                                                        + "<p style='width: 200px;'>"+"Varilla: " + rs.getString("vnombre")+"</p>"
+                                        + "</body></html>", 
+                        "DETALLE DEL CUADRO", 
+                        JOptionPane.PLAIN_MESSAGE);
+                        // Y así sucesivamente para cada columna devuelta por el procedimiento
+                    }
+                }
+            }catch (SQLException e) {
+                System.out.println(e);
+            }
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, "SELECIONE UN CUADRO");
+        }
+       
+    }//GEN-LAST:event_bInfoProductoActionPerformed
+    public void precioActualizar() {
+        float precio = 0;
+        int id=pedido.getIdPedido();
+        try {
+            String procedimiento = "{ CALL vta_det_calc_total(?, ?) }";
+            try (CallableStatement cs = conex.prepareCall(procedimiento)) {
+                // Establecer el parámetro de entrada del procedimiento
+                cs.setInt(1,id);
+                // Registrar el parámetro de salida del procedimiento
+                cs.registerOutParameter(2, Types.FLOAT);
+                // Ejecutar el procedimiento
+                cs.execute();
+                // Obtener el valor del parámetro de salida
+                precio = cs.getFloat(2);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        labelPrecio.setText(String.valueOf(precio));
+    }
+    
+    private void bBoletaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bBoletaActionPerformed
+        // TODO add your handling code here:
+        ClienteVista clientevista=new ClienteVista(new javax.swing.JFrame(), true);
+        clientevista.setLocationRelativeTo(this);
+        clientevista.setVisible(true);
+        String name=clientevista.nameCliente;
+        jLabel5.setText(name);
+        CobroVista cv1=new CobroVista(new javax.swing.JFrame(), true,pedido.getIdPedido(),name);
+        cv1.setLocationRelativeTo(this);
+        cv1.setVisible(true);
+        reiniciar();
+    }//GEN-LAST:event_bBoletaActionPerformed
     
     private void jBuscadorVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBuscadorVentaActionPerformed
         // TODO add your handling code here:
@@ -343,7 +471,9 @@ public class DVentas extends javax.swing.JDialog {
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton3ActionPerformed
-
+    
+  
+    
     private void bCantidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCantidadActionPerformed
         // TODO add your handling code here:
         try{
@@ -351,14 +481,33 @@ public class DVentas extends javax.swing.JDialog {
             CantidadPedido cant_ped=new CantidadPedido(new javax.swing.JFrame(), true,id);
             cant_ped.setLocationRelativeTo(this);
             cant_ped.setVisible(true);
-            pedido.cambiarCant(id, cant_ped.getCantidad());
+            if(cant_ped.getCantidad()>0){
+                pedido.cambiarCant(id, cant_ped.getCantidad());
+            }else{
+                JOptionPane.showMessageDialog(null, "SELECIONE UNA CANTIDAD VALIDA");
+            }
             actualizarTablaCuadros();
         }catch(Exception e){
             JOptionPane.showMessageDialog(null, "SELECIONE UN CUADRO");
         }
-
     }//GEN-LAST:event_bCantidadActionPerformed
 
+    private void reiniciar(){
+        // Cerrar el diálogo
+        dispose();
+        // Cerrar la ventana principal si aún está abierta
+        if (this != null) {
+            this.dispose();
+        }
+        // Crear una nueva instancia de la ventana principal y mostrarla
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                DVentas dialog = new DVentas(new javax.swing.JFrame(), true);
+                dialog.setLocation(getLocation());
+                dialog.setVisible(true);
+            }
+        });
+    }
     /**
      * @param args the command line arguments
      */
@@ -402,19 +551,22 @@ public class DVentas extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton bBoleta;
     private javax.swing.JButton bCantidad;
+    private javax.swing.JButton bEliminarPedido;
+    private javax.swing.JButton bInfoProducto;
     private javax.swing.JTextField jBuscadorVenta;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel labelPrecio;
     private javax.swing.JLabel pedido_label;
     private javax.swing.JTable tPedido;
     // End of variables declaration//GEN-END:variables

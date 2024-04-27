@@ -30,16 +30,25 @@ public class CuadroDobleV extends Cuadro{
         conex=cone.conectar();
     }
     public double cuadroDobleVCosto(){
-        double c_liston=li.precio_liston(tamCuadro());
-        double c_vidrio=tamArte()*vi.getPrecio_costo_cm2();
-        double c_nordex=tamArte()*n1.getPrecio_costo_cm2();
-        double c_varilla=va.precio_varilla_costo(getLargo(),getAncho());
-        double adicionales=0;
+        double c_liston=li.precio_liston(tamCuadro()); 
         System.out.println("Marco: "+c_liston);
-        System.out.println("Frontal: "+c_vidrio);
-        System.out.println("Trasera: "+c_nordex);
-        System.out.println("Varilla: "+c_varilla+" -> x2 ("+c_varilla*2+")");
-        return c_liston+c_vidrio*2+c_varilla*2+adicionales;
+        double costoFrontal=0,costoTrasera=0,costoVarilla=0;
+        if(vi.getPrecio_costo_cm2()>0){
+            costoFrontal=tamArte()*vi.getPrecio_costo_cm2();
+            System.out.println("Frontal: "+costoFrontal);
+        }
+        else{System.out.println("Sin Frontal");}
+        if(n1.getPrecio_costo_cm2()>0){
+            costoTrasera=tamArte()*n1.getPrecio_costo_cm2();
+            System.out.println("Trasera: "+costoTrasera);
+        }
+        else{System.out.println("Sin Trasera");}
+        if(va.getLargo()>0){
+            costoVarilla=va.precio_varilla_costo(getLargo(),getAncho());
+            System.out.println("Varilla: "+costoVarilla);
+        }
+        else{System.out.println("Sin Varilla");}
+        return c_liston+costoFrontal+costoTrasera+costoVarilla;
     }
         /*
     public void grabarCuadro(double largo, double ancho,String tipo,int liston,int frontal,int trasera,int varilla,double precio){

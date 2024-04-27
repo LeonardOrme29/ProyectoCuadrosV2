@@ -8,6 +8,8 @@ public class Vidrio {
     public Vidrio(double largo, double ancho,double precio_costo){
         setPrecio_costo_cm2(calc_precio_costo_cm2(largo,ancho,precio_costo));
     }
+    public Vidrio(){
+    }
     //SETTERS
     public void setPrecio_costo_cm2(double precio_costo_cm2){
         this.precio_costo_cm2=precio_costo_cm2;

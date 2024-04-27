@@ -34,6 +34,11 @@ public class Pedidos {
     public String getN_pedido() {
         return n_pedido;
     }
+
+    public int getIdPedido() {
+        return idPedido;
+    }
+    
     public String calcAnteriorPedido(){
         String anterior_pedido=null;
         try{

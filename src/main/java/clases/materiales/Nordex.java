@@ -2,6 +2,8 @@ package clases.materiales;
 
 public class Nordex {
     private double precio_costo_cm2;
+    public Nordex(){
+    }
     public Nordex(double precio_costo_cm2){
         this.precio_costo_cm2=precio_costo_cm2;
     }

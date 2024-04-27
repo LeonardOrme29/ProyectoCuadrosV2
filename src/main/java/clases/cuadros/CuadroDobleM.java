@@ -31,24 +31,24 @@ public class CuadroDobleM extends Cuadro{
     public double cuadroDobleMCosto(){
         double c_liston=li.precio_liston(tamCuadro());  //COSTO DE MARCO 1
         double c_liston2=li.precio_liston(tamCuadro()+(li.getMarco_tam_cm()*2.5));      //COSTO DE MARCO 2
-        double c_vidrio=tamArte()*vi.getPrecio_costo_cm2();     //COSTO DEL VIDRIO
-        double c_varilla=va.precio_varilla_costo(getLargo(),getAncho());        //COSTO VARILLA
-        double c_nordex=tamArte()*no.getPrecio_costo_cm2();     //COSTO NORDEX
-        double adicionales=0;
-        System.out.println("Marco 1: "+c_liston);
-        System.out.println("Marco 2: "+c_liston2);
-        System.out.println("Vidrio unidad: "+c_vidrio);
-        System.out.println("Varilla: "+c_varilla+" -> x2 ("+c_varilla*2+")");
-        System.out.println("Nordex: "+c_nordex);
-        return c_liston+c_liston2+c_vidrio+c_varilla+c_nordex;
-    }
-    public static void main(String args[]){
-        Liston li=new Liston(320, 12.50, 1.5);
-        Vidrio vi=new Vidrio(0.008);
-        Nordex no=new Nordex(240,122,31);
-        Varilla va=new Varilla(320, 5);
-        CuadroDobleM cdm=new CuadroDobleM(40,45,li,vi,no,va);
-        System.out.println(cdm.cuadroDobleMCosto());
+        System.out.println("Marco: "+c_liston);
+        double costoFrontal=0,costoTrasera=0,costoVarilla=0;
+        if(vi.getPrecio_costo_cm2()>0){
+            costoFrontal=tamArte()*vi.getPrecio_costo_cm2();
+            System.out.println("Frontal: "+costoFrontal);
+        }
+        else{System.out.println("Sin Frontal");}
+        if(no.getPrecio_costo_cm2()>0){
+            costoTrasera=tamArte()*no.getPrecio_costo_cm2();
+            System.out.println("Trasera: "+costoTrasera);
+        }
+        else{System.out.println("Sin Trasera");}
+        if(va.getLargo()>0){
+            costoVarilla=va.precio_varilla_costo(getLargo(),getAncho());
+            System.out.println("Varilla: "+costoVarilla);
+        }
+        else{System.out.println("Sin Varilla");}
+        return c_liston+c_liston2+costoFrontal+costoTrasera+costoVarilla;
     }
     /*    
     public void grabarCuadro(double largo, double ancho,String tipo,int liston,int frontal,int trasera,int varilla,double precio){

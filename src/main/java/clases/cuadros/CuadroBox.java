@@ -26,19 +26,25 @@ public class CuadroBox extends Cuadro {
         conex=cone.conectar();
     }
     public double cuadroBoxCosto(){
-        System.out.println("Marco: "+li.precio_liston(tamCuadro()));
-        System.out.println("Vidrio: "+tamArte()*vi.getPrecio_costo_cm2());
-        System.out.println("Nordex: "+tamArte()*no.getPrecio_costo_cm2());
-        System.out.println("Varilla: "+va.precio_varilla_costo(getLargo(),getAncho()));
-        return li.precio_liston(tamCuadro())+(tamArte()*vi.getPrecio_costo_cm2())+(tamArte()*no.getPrecio_costo_cm2())+(va.precio_varilla_costo(getLargo(),getAncho()));
-    }
-    public static void main(String[] args) {
-        Liston li=new Liston(320, 12.50, 1.5);
-        Vidrio vi=new Vidrio(0.008);
-        Nordex no=new Nordex(240,122,31);
-        Varilla va=new Varilla(320, 5);
-        CuadroBox cp1=new CuadroBox(21, 27.9, li, vi, no,va);
-        System.out.println(cp1.cuadroBoxCosto());
+        double c_liston=li.precio_liston(tamCuadro()); 
+        System.out.println("Marco: "+c_liston);
+        double costoFrontal=0,costoTrasera=0,costoVarilla=0;
+        if(vi.getPrecio_costo_cm2()>0){
+            costoFrontal=tamArte()*vi.getPrecio_costo_cm2();
+            System.out.println("Frontal: "+costoFrontal);
+        }
+        else{System.out.println("Sin Frontal");}
+        if(no.getPrecio_costo_cm2()>0){
+            costoTrasera=tamArte()*no.getPrecio_costo_cm2();
+            System.out.println("Trasera: "+costoTrasera);
+        }
+        else{System.out.println("Sin Trasera");}
+        if(va.getLargo()>0){
+            costoVarilla=va.precio_varilla_costo(getLargo(),getAncho());
+            System.out.println("Varilla: "+costoVarilla);
+        }
+        else{System.out.println("Sin Varilla");}
+        return c_liston+costoFrontal+costoTrasera+costoVarilla;
     }
     
     /*

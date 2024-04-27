@@ -10,6 +10,27 @@ public class Liston {
         this.precio_costo=precio_costo;
         this.marco_tam_cm=marco_tam_cm;
     }
+    public Liston(){
+        
+    }
+    //SETTERS
+
+    public void setLargo(double largo) {
+        this.largo = largo;
+    }
+
+    public void setPrecio_costo(double precio_costo) {
+        this.precio_costo = precio_costo;
+    }
+
+    public void setMarco_tam_cm(double marco_tam_cm) {
+        this.marco_tam_cm = marco_tam_cm;
+    }
+
+    public void setProfundidad(double profundidad) {
+        this.profundidad = profundidad;
+    }
+    
     //GETTERS
     public double getLargo(){
         return this.largo;

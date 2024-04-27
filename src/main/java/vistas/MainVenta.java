@@ -147,6 +147,9 @@ public class MainVenta extends javax.swing.JFrame {
 
     private void jaReportesVentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jaReportesVentasActionPerformed
         // TODO add your handling code here:
+        ReporteVentasMain rvm=new ReporteVentasMain(this,true);
+        rvm.setLocationRelativeTo(this);
+        rvm.setVisible(true);
     }//GEN-LAST:event_jaReportesVentasActionPerformed
 
     private void jaMaterialesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jaMaterialesActionPerformed
