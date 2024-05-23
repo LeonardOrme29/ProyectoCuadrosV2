@@ -13,9 +13,15 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import logica.*;
 import alertasVistas.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.sql.CallableStatement;
 import java.sql.Types;
 import java.text.DecimalFormat;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JComponent;
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 /**
  *
@@ -44,6 +50,16 @@ public class DVentas extends javax.swing.JDialog {
         pedido_label.setText(pedido.getN_pedido());
         tmodelo = (DefaultTableModel) tPedido.getModel();
         //actualizarTablaCuadros();
+        
+        KeyStroke escapeKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
+        Action escapeAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose(); // Cerrar el diálogo
+            }
+        };
+        getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(escapeKeyStroke, "ESCAPE");
+        getRootPane().getActionMap().put("ESCAPE", escapeAction);
     }
 
     /**
@@ -444,17 +460,44 @@ public class DVentas extends javax.swing.JDialog {
         labelPrecio.setText(String.valueOf(precio));
     }
     
+    public boolean verificadorDeVenta(){
+        boolean verificador=false;
+        try{
+            String sSQL="{ CALL verificar_vta_cab(?, ?) }";
+            try (CallableStatement cs = conex.prepareCall(sSQL)){
+                // Establecer el parámetro de entrada del procedimiento
+                cs.setInt(1,pedido.getIdPedido());
+                // Registrar el parámetro de salida del procedimiento
+                cs.registerOutParameter(2, Types.BOOLEAN);
+                // Ejecutar el procedimiento
+                cs.execute();
+                // Obtener el valor del parámetro de salida
+                verificador = cs.getBoolean(2);
+                System.out.println("se finalizo la venta? : "+verificador);
+            }
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null,e, "ERROR AL REVISAR SI SE HIZO LA VENTA", JOptionPane.ERROR_MESSAGE);
+        }
+        return verificador;
+    }
+    
     private void bBoletaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bBoletaActionPerformed
         // TODO add your handling code here:
-        ClienteVista clientevista=new ClienteVista(new javax.swing.JFrame(), true);
+        ClienteVista clientevista = new ClienteVista(new javax.swing.JFrame(), true);
         clientevista.setLocationRelativeTo(this);
         clientevista.setVisible(true);
-        String name=clientevista.nameCliente;
-        jLabel5.setText(name);
-        CobroVista cv1=new CobroVista(new javax.swing.JFrame(), true,pedido.getIdPedido(),name);
+        String name = clientevista.nameCliente;
+        CobroVista cv1 = new CobroVista(new javax.swing.JFrame(), true, pedido.getIdPedido(), name);
         cv1.setLocationRelativeTo(this);
         cv1.setVisible(true);
-        reiniciar();
+        do {
+            jLabel5.setText(name);
+            if (verificadorDeVenta()) {
+                reiniciar();
+                break;
+            }
+        } while (verificadorDeVenta()==true);
+        System.out.println("fueraaaaaaa");
     }//GEN-LAST:event_bBoletaActionPerformed
     
     private void jBuscadorVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBuscadorVentaActionPerformed

@@ -4,12 +4,14 @@
  */
 package logica;
 import conexion.*;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.JOptionPane;
 import java.sql.Timestamp; 
+import java.sql.Types;
 
 /**
  *
@@ -47,7 +49,7 @@ public class Pedidos {
                 ResultSet res=cn.executeQuery(sSQL);
                 while(res.next()){
                     anterior_pedido=res.getString("N_PEDIDO");
-                   idPedido=1+Integer.parseInt(res.getString("id_pedido"));
+                   //idPedido=1+Integer.parseInt(res.getString("id_pedido"));
                 }
             }catch(SQLException e){
                 JOptionPane.showMessageDialog(null, e.getMessage());
@@ -69,19 +71,43 @@ public class Pedidos {
         return sig_pedido;
     }
     
-    public void crearPedido(String nroPedido){
-        String sSQL = "INSERT INTO pedido(N_PEDIDO, fecha,pedido_estado) VALUES ('"+nroPedido+"',NOW(),'P')";
-        try {
-            Statement st = conex.createStatement();
-            int rowsAffected = st.executeUpdate(sSQL);
-            if (rowsAffected > 0) {
-                System.out.println("Se creo un nuevo registro de pedido nro:"+nroPedido);
-            } else {
-                JOptionPane.showMessageDialog( null,"ALGO MALO PASO,NO SE GENERO PEDIDO");
+    public boolean verificarPedidoCreado(String nroPedido){ //CON EL NUEVO STORE PROCEDURE YA NO SERA NECESARIO YA QUE SI EXISTE ARROJA EL VALOR DE -1
+        String sSQL="SELECT id_pedido FROM pedido WHERE N_PEDIDO="+nroPedido+";";
+        try{
+            Statement st=conex.createStatement();
+            ResultSet res=st.executeQuery(sSQL);
+            if(res.next()){
+                //idPedido=res.getInt("id_pedido");
+                return true;
+            }else{
+                return false;
             }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, e.getMessage());
-            e.printStackTrace();
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null,e, "Error al verificar el cobro.", JOptionPane.ERROR_MESSAGE);
+        }
+        return false;
+    }
+    
+    public void crearPedido(String nroPedido){
+        if(!verificarPedidoCreado(nroPedido)){
+            String spSQL="{CALL pedido_crearPedido(?,?)}";
+            try {
+                CallableStatement cs=conex.prepareCall(spSQL);
+                cs.setString(1,nroPedido);
+                cs.registerOutParameter(2, Types.INTEGER);
+                cs.execute();
+                idPedido=cs.getInt(2);
+                if (idPedido!=0) {
+                    System.out.println("Se creo un nuevo registro de pedido nro:"+nroPedido);
+                } else {
+                    System.out.println("Ya se creo el pedido");
+                }
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, e.getMessage());
+                e.printStackTrace();
+            }
+        }else{
+            System.out.println("El pedido:"+nroPedido+" ya esta creado con el id: "+getIdPedido());
         }
     }
     
@@ -104,6 +130,7 @@ public class Pedidos {
     
     public void addCuadro(int idCuadro){
         String sSQL = "INSERT INTO vta_det(pedido,cuadro,cant) VALUES ("+idPedido+",'"+idCuadro+"',1)";
+        JOptionPane.showMessageDialog(null,"NUM DE ID PEDIDO: "+idPedido);
         try {
             Statement st = conex.createStatement();
             int rowsAffected = st.executeUpdate(sSQL);

@@ -142,7 +142,17 @@ public class CuadroController {
         System.out.println(va1.precio_costo());
         return va1;
     }
-
+    public int obtenerIdCuadroProximo(){
+        try{
+            String sSQL="SELECT id_cuadro FROM cuadro WHERE id_cuadro=(SELECT MAX(id_cuadro) FROM cuadro)"; 
+            Statement cn=conex.createStatement();
+            ResultSet res=cn.executeQuery(sSQL);
+            return res.getInt("id_cuadro");
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null,e, "Error al realizar la funcion: obtenerIdCuadroProximo()", JOptionPane.ERROR_MESSAGE);
+        }
+        return -1;
+    }
     public void grabarCuadro() {
         String sSQL = "INSERT INTO cuadro (largo, ancho, tipo, liston, frontal, trasera, varilla, precio, custom, pedido_estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'S', 'P')";
         try {

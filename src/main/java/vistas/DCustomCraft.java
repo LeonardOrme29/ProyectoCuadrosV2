@@ -4,6 +4,7 @@
  */
 package vistas;
 
+import alertasVistas.CantidadAdicional;
 import clases.materiales.*;
 import clases.cuadros.*;
 import conexion.*;
@@ -13,6 +14,7 @@ import logica.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -32,6 +34,9 @@ public class DCustomCraft extends javax.swing.JDialog {
     private double ancho;
     private String tipoCuadro;
     private double precioCuadro;
+    
+    protected ArrayList<Adicional> adicionales;
+    protected AdicionalController ac;
     
     static private DVentas dvPadre;
     private DVentas dvP;
@@ -55,6 +60,8 @@ public class DCustomCraft extends javax.swing.JDialog {
         //iniciales
         dvP=dv;
         labelNroPedido.setText(p.getN_pedido());
+        AdicionalController ac1=new AdicionalController();
+        ac=ac1;
         llenarListonTabla();
         llenarFrontal();
         llenarTrasera();
@@ -94,9 +101,14 @@ public class DCustomCraft extends javax.swing.JDialog {
         cbFrontal = new javax.swing.JComboBox<>();
         cbTapaTrasera = new javax.swing.JComboBox<>();
         jPanel2 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tAdicional = new javax.swing.JTable();
+        jLabel13 = new javax.swing.JLabel();
+        bAdiAdd = new javax.swing.JButton();
+        bAdiCam = new javax.swing.JButton();
+        bAdiEli = new javax.swing.JButton();
         jLabel10 = new javax.swing.JLabel();
-        jCheckBox2 = new javax.swing.JCheckBox();
-        jCheckBox1 = new javax.swing.JCheckBox();
+        jComboBox1 = new javax.swing.JComboBox<>();
         labelNroPedido = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         cbVarilla = new javax.swing.JComboBox<>();
@@ -256,22 +268,66 @@ public class DCustomCraft extends javax.swing.JDialog {
         jPanel2.setBackground(new java.awt.Color(255, 102, 102));
         jPanel2.setForeground(new java.awt.Color(255, 102, 102));
 
-        jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        jLabel10.setText("ADICIONALES:");
+        tAdicional.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
 
-        jCheckBox2.setText("PASPARTÚ");
-        jCheckBox2.addActionListener(new java.awt.event.ActionListener() {
+            },
+            new String [] {
+                "Descripción", "Cant", "P UNIT", "TOTAL"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.Integer.class, java.lang.Float.class, java.lang.Float.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane2.setViewportView(tAdicional);
+        if (tAdicional.getColumnModel().getColumnCount() > 0) {
+            tAdicional.getColumnModel().getColumn(0).setResizable(false);
+            tAdicional.getColumnModel().getColumn(0).setPreferredWidth(200);
+            tAdicional.getColumnModel().getColumn(1).setResizable(false);
+            tAdicional.getColumnModel().getColumn(2).setResizable(false);
+            tAdicional.getColumnModel().getColumn(3).setResizable(false);
+        }
+
+        jLabel13.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel13.setText("ADICIONALES:");
+
+        bAdiAdd.setText("AÑADIR");
+        bAdiAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox2ActionPerformed(evt);
+                bAdiAddActionPerformed(evt);
             }
         });
 
-        jCheckBox1.setText("LISTO PARA COLGAR");
-        jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
+        bAdiCam.setText("CAMBIAR CANT.");
+        bAdiCam.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox1ActionPerformed(evt);
+                bAdiCamActionPerformed(evt);
             }
         });
+
+        bAdiEli.setText("ELIMINAR");
+        bAdiEli.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bAdiEliActionPerformed(evt);
+            }
+        });
+
+        jLabel10.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel10.setText("Pintura:");
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -280,22 +336,43 @@ public class DCustomCraft extends javax.swing.JDialog {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel10)
-                    .addComponent(jCheckBox2)
-                    .addComponent(jCheckBox1))
-                .addContainerGap(250, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel13)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(bAdiAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(bAdiCam, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(bAdiEli, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel10)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(19, 19, 19)
-                .addComponent(jLabel10)
-                .addGap(18, 18, 18)
-                .addComponent(jCheckBox2)
-                .addGap(64, 64, 64)
-                .addComponent(jCheckBox1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(jLabel13)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10)
+                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(bAdiAdd)
+                    .addComponent(bAdiCam)
+                    .addComponent(bAdiEli))
+                .addContainerGap())
         );
+
+        bAdiAdd.getAccessibleContext().setAccessibleName("");
 
         labelNroPedido.setText("000000");
 
@@ -339,51 +416,48 @@ public class DCustomCraft extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addGap(34, 34, 34)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(cbTipoCuadro, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel1))
+                .addGap(75, 75, 75)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jScrollPane1))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(cbTipoCuadro, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel4)
+                                .addGap(88, 88, 88)
+                                .addComponent(jLabel12))
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(75, 75, 75)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel4)
-                                        .addGap(88, 88, 88)
-                                        .addComponent(jLabel12))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jLabel9)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(cbFrontal, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addGap(51, 51, 51)
-                                                .addComponent(checkFrontal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                                .addGroup(layout.createSequentialGroup()
-                                                    .addComponent(jLabel11)
-                                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                    .addComponent(cbVarilla, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                    .addComponent(checkVarilla))
-                                                .addGroup(layout.createSequentialGroup()
-                                                    .addComponent(jLabel5)
-                                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                    .addComponent(cbTapaTrasera, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                    .addGap(18, 18, 18)
-                                                    .addComponent(checkTrasera))))
-                                        .addGap(15, 15, 15)))
-                                .addGap(81, 81, 81))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(58, 58, 58)
-                                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addGap(65, 65, 65))
+                                        .addComponent(jLabel9)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(cbFrontal, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(51, 51, 51)
+                                        .addComponent(checkFrontal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addComponent(jLabel11)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(cbVarilla, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(checkVarilla))
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addComponent(jLabel5)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(cbTapaTrasera, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGap(18, 18, 18)
+                                            .addComponent(checkTrasera))))
+                                .addGap(15, 15, 15)))
+                        .addGap(146, 146, 146))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -433,21 +507,32 @@ public class DCustomCraft extends javax.swing.JDialog {
                         .addComponent(cbVarilla, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(checkVarilla, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 244, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 43, Short.MAX_VALUE)
                 .addComponent(bCotizar)
                 .addGap(47, 47, 47))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+    
+    
+    public void actualizarAdicionalTabla(){
+        modelo = (DefaultTableModel) tAdicional.getModel();     
+        modelo.setRowCount(0); //LIMPIAR TABLA
+        for (int i = 0; i < ac.getAdicionales().size(); i++) {
+            Adicional adicional = ac.getAdicionales().get(i);
+            modelo.addRow(new Object[]{adicional.getDes_corta(), adicional.getCant(), adicional.getPrecio_venta_total(), adicional.getCant()*adicional.getPrecio_venta_total()});
+        }
+    }
     public void llenarListonTabla(){
         Object[] listonArray=new Object[4];
-         modelo = (DefaultTableModel) tListon.getModel();
+        modelo = (DefaultTableModel) tListon.getModel();
         try{
                 String sSQL="SELECT id,des,prof,mat FROM liston";
                 Statement cn=conex.createStatement();
@@ -523,17 +608,14 @@ public class DCustomCraft extends javax.swing.JDialog {
         CuadroController cc1=new CuadroController(conex,largo,ancho,tipoCuadro,id_liston,frontal,trasera,varilla);
         cc1.precio_costo_cuadro();
         JOptionPane.showMessageDialog(null,"SE HA COTIZADO CORRECTAMENTE PRECIO COSTO: " + cc1.getPrecioCuadro());
-        cc1.grabarCuadro();
+        cc1.grabarCuadro(); //TERMINA DE CREAR EL CUADRO
+        //EMPIEZA A GUARDAR LOS PEDIDOS
         JOptionPane.showMessageDialog(null,"SE HA GRABADO CORRECTAMENTE EL PEDIDO ID: " + cc1.getIdCuadro());
         pedido.crearPedido(pedido.getN_pedido());
         pedido.addCuadro(cc1.getIdCuadro());
         dvP.actualizarTablaCuadros();
         this.dispose();
     }//GEN-LAST:event_bCotizarActionPerformed
-
-    private void jCheckBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox2ActionPerformed
 
     private void cbTipoCuadroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbTipoCuadroActionPerformed
         // TODO add your handling code here:
@@ -542,10 +624,6 @@ public class DCustomCraft extends javax.swing.JDialog {
     private void cbTapaTraseraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbTapaTraseraActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cbTapaTraseraActionPerformed
-
-    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox1ActionPerformed
 
     private void cbVarillaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbVarillaActionPerformed
         // TODO add your handling code here:
@@ -589,6 +667,46 @@ public class DCustomCraft extends javax.swing.JDialog {
         // TODO add your handling code here:
         cbFrontal.setEnabled(!checkFrontal.isSelected());
     }//GEN-LAST:event_checkFrontalActionPerformed
+
+    private void bAdiEliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bAdiEliActionPerformed
+        // TODO add your handling code here:
+        try{
+            if (tAdicional.getSelectedRow()!= -1) {
+                ArrayList<Adicional> aux=new ArrayList();
+                aux=ac.getAdicionales();
+                aux.remove(tAdicional.getSelectedRow());
+                ac.setAdicionales(aux);
+                actualizarAdicionalTabla();
+            } else {
+                JOptionPane.showMessageDialog(null, "SELECIONE UNA FILA");
+            }
+        }catch(Exception e){
+            System.out.println(e);
+        }
+    }//GEN-LAST:event_bAdiEliActionPerformed
+
+    private void bAdiAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bAdiAddActionPerformed
+        // TODO add your handling code here:
+        ac.arrayAdicional(this);
+        actualizarAdicionalTabla();
+    }//GEN-LAST:event_bAdiAddActionPerformed
+
+    private void bAdiCamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bAdiCamActionPerformed
+        try{
+            if (tAdicional.getSelectedRow() != -1) {
+                Adicional adi=ac.getAdicionales().get(tAdicional.getSelectedRow());
+                CantidadAdicional cant_add=new CantidadAdicional(new javax.swing.JFrame(), true);
+                cant_add.setLocationRelativeTo(this);
+                cant_add.setVisible(true);
+                adi.setCant(cant_add.getCant());
+                actualizarAdicionalTabla();
+            } else {
+                JOptionPane.showMessageDialog(null, "SELECIONE UNA FILA");
+            }
+        }catch(Exception e){
+            System.out.println(e);
+        }
+    }//GEN-LAST:event_bAdiCamActionPerformed
 
     /**
      * @param args the command line arguments
@@ -634,6 +752,9 @@ public class DCustomCraft extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup BtapaTrasera;
     private javax.swing.ButtonGroup Bvidrios;
+    private javax.swing.JButton bAdiAdd;
+    private javax.swing.JButton bAdiCam;
+    private javax.swing.JButton bAdiEli;
     private javax.swing.JButton bCotizar;
     private javax.swing.JComboBox<String> cbFrontal;
     private javax.swing.JComboBox<String> cbTapaTrasera;
@@ -642,12 +763,12 @@ public class DCustomCraft extends javax.swing.JDialog {
     private javax.swing.JCheckBox checkFrontal;
     private javax.swing.JCheckBox checkTrasera;
     private javax.swing.JCheckBox checkVarilla;
-    private javax.swing.JCheckBox jCheckBox1;
-    private javax.swing.JCheckBox jCheckBox2;
+    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -659,10 +780,12 @@ public class DCustomCraft extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JLabel labelNroPedido;
+    private javax.swing.JTable tAdicional;
     private javax.swing.JTable tListon;
     private javax.swing.JFormattedTextField tfAncho;
     private javax.swing.JFormattedTextField tfLargo;
