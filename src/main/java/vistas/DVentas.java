@@ -239,7 +239,7 @@ public class DVentas extends javax.swing.JDialog {
         });
 
         labelPrecio.setFont(new java.awt.Font("Segoe UI Semibold", 0, 18)); // NOI18N
-        labelPrecio.setText("99.99");
+        labelPrecio.setText("00.00");
 
         jLabel3.setFont(new java.awt.Font("Segoe UI Semibold", 0, 18)); // NOI18N
         jLabel3.setText("S/");
@@ -342,7 +342,7 @@ public class DVentas extends javax.swing.JDialog {
         System.out.println("Fin de la limpieza de la tabla");
         try {
             System.out.println("rellenar tabla");
-            String sSQL = "SELECT vd.id_vta_det,c.des, c.tipo, c.precio, c.tam, vd.cant,vd.pedido_precio FROM pedido p JOIN vta_det vd ON p.id_pedido = vd.pedido JOIN cuadro c ON vd.cuadro = c.id_cuadro WHERE p.N_PEDIDO = '"+pedido.getN_pedido()+"' AND vd.est_ped='S';";
+            String sSQL = "SELECT vd.id_vta_det,c.des, c.tipo, c.vprecio, c.tam, vd.cant,vd.pedido_precio FROM pedido p JOIN vta_det vd ON p.id_pedido = vd.pedido JOIN cuadro c ON vd.cuadro = c.id_cuadro WHERE p.N_PEDIDO = '"+pedido.getN_pedido()+"' AND vd.est_ped='S';";
             Statement cn = conex.createStatement();
             ResultSet res = cn.executeQuery(sSQL);
             ArrayList<Integer> idP = new ArrayList<>();
@@ -354,7 +354,7 @@ public class DVentas extends javax.swing.JDialog {
                 fila.add(res.getString("tam"));
                 fila.add(res.getString("tipo"));
                 fila.add((Object) res.getDouble("cant"));
-                fila.add((Object) res.getDouble("precio"));
+                fila.add((Object) res.getDouble("vprecio"));
                 fila.add((Object) res.getDouble("pedido_precio"));
                 // Agregar la fila al modelo de tabla
                 tmodelo.addRow(fila.toArray());
@@ -457,7 +457,7 @@ public class DVentas extends javax.swing.JDialog {
         } catch (SQLException e) {
             System.out.println(e);
         }
-        labelPrecio.setText(String.valueOf(precio));
+        labelPrecio.setText(String.format("%.2f", precio));
     }
     
     public boolean verificadorDeVenta(){

@@ -10,10 +10,13 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
+
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.time.LocalDate;
 
 /**
  *
@@ -44,11 +47,11 @@ public class ReporteVentasMain extends javax.swing.JDialog {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         tReporteVentas = new javax.swing.JTable();
-        tfDesde = new javax.swing.JFormattedTextField();
         jLabel1 = new javax.swing.JLabel();
-        tfHasta = new javax.swing.JFormattedTextField();
         jLabel2 = new javax.swing.JLabel();
         bBuscar = new javax.swing.JButton();
+        tfDesde = new javax.swing.JTextField();
+        tfHasta = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -70,22 +73,8 @@ public class ReporteVentasMain extends javax.swing.JDialog {
         });
         jScrollPane1.setViewportView(tReporteVentas);
 
-        tfDesde.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("dd-MM-yy"))));
-        tfDesde.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tfDesdeActionPerformed(evt);
-            }
-        });
-
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jLabel1.setText("Desde:");
-
-        tfHasta.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("dd-MM-yy"))));
-        tfHasta.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tfHastaActionPerformed(evt);
-            }
-        });
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jLabel2.setText("Hasta:");
@@ -95,6 +84,18 @@ public class ReporteVentasMain extends javax.swing.JDialog {
         bBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bBuscarActionPerformed(evt);
+            }
+        });
+
+        tfDesde.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tfDesdeActionPerformed(evt);
+            }
+        });
+
+        tfHasta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tfHastaActionPerformed(evt);
             }
         });
 
@@ -124,26 +125,101 @@ public class ReporteVentasMain extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addGap(42, 42, 42)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tfHasta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2)
                     .addComponent(jLabel1)
+                    .addComponent(bBuscar)
                     .addComponent(tfDesde, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(bBuscar))
+                    .addComponent(tfHasta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 511, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(82, Short.MAX_VALUE))
+                .addGap(82, 82, 82))
         );
+
+        tfDesde.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                String text = tfDesde.getText();
+                int length = text.length();
+
+                // Allow only digits, backspace, and delete
+                if (!Character.isDigit(c) && c != KeyEvent.VK_BACK_SPACE && c != KeyEvent.VK_DELETE) {
+                    e.consume();
+                    return;
+                }
+
+                // Automatically insert dashes at the appropriate positions when typing digits
+                if (Character.isDigit(c)) {
+                    if (length == 2 || length == 5) {
+                        tfDesde.setText(text + "-");
+                        tfDesde.setCaretPosition(tfDesde.getText().length());
+                    }
+
+                    // Limit to 8 characters (DD-MM-YY)
+                    if (length >= 8) {
+                        e.consume();
+                    }
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                String text = tfDesde.getText();
+
+                // If the text length is more than 5 and user presses backspace to remove parts, allow deletion
+                if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE || e.getKeyCode() == KeyEvent.VK_DELETE) {
+                    if (text.length() == 5 && text.endsWith("-")) {
+                        tfDesde.setText(text.substring(0, 5));
+                    } else if (text.length() == 2 && text.endsWith("-")) {
+                        tfDesde.setText(text.substring(0, 2));
+                    }
+                }
+            }
+        });
+        tfHasta.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                String text = tfHasta.getText();
+                int length = text.length();
+
+                // Allow only digits, backspace, and delete
+                if (!Character.isDigit(c) && c != KeyEvent.VK_BACK_SPACE && c != KeyEvent.VK_DELETE) {
+                    e.consume();
+                    return;
+                }
+
+                // Automatically insert dashes at the appropriate positions when typing digits
+                if (Character.isDigit(c)) {
+                    if (length == 2 || length == 5) {
+                        tfHasta.setText(text + "-");
+                        tfHasta.setCaretPosition(tfHasta.getText().length());
+                    }
+
+                    // Limit to 8 characters (DD-MM-YY)
+                    if (length >= 8) {
+                        e.consume();
+                    }
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                String text = tfHasta.getText();
+
+                // If the text length is more than 5 and user presses backspace to remove parts, allow deletion
+                if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE || e.getKeyCode() == KeyEvent.VK_DELETE) {
+                    if (text.length() == 5 && text.endsWith("-")) {
+                        tfHasta.setText(text.substring(0, 5));
+                    } else if (text.length() == 2 && text.endsWith("-")) {
+                        tfHasta.setText(text.substring(0, 2));
+                    }
+                }
+            }
+        });
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void tfHastaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfHastaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_tfHastaActionPerformed
-
-    private void tfDesdeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfDesdeActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_tfDesdeActionPerformed
     public String fechaFormateada(String fechaString){
         DateTimeFormatter dtfEntrada = DateTimeFormatter.ofPattern("dd-MM-yy");
         LocalDate fecha = LocalDate.parse(fechaString, dtfEntrada);
@@ -197,6 +273,14 @@ public class ReporteVentasMain extends javax.swing.JDialog {
         actualizarTablaVentas(desde,hasta);
     }//GEN-LAST:event_bBuscarActionPerformed
 
+    private void tfDesdeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfDesdeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfDesdeActionPerformed
+
+    private void tfHastaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfHastaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfHastaActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -244,7 +328,7 @@ public class ReporteVentasMain extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tReporteVentas;
-    private javax.swing.JFormattedTextField tfDesde;
-    private javax.swing.JFormattedTextField tfHasta;
+    private javax.swing.JTextField tfDesde;
+    private javax.swing.JTextField tfHasta;
     // End of variables declaration//GEN-END:variables
 }

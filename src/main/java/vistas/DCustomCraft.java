@@ -35,7 +35,7 @@ public class DCustomCraft extends javax.swing.JDialog {
     private String tipoCuadro;
     private double precioCuadro;
     
-    protected ArrayList<Adicional> adicionales;
+    //protected ArrayList<Adicional> adicionales;
     protected AdicionalController ac;
     
     static private DVentas dvPadre;
@@ -521,7 +521,6 @@ public class DCustomCraft extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
     
-    
     public void actualizarAdicionalTabla(){
         modelo = (DefaultTableModel) tAdicional.getModel();     
         modelo.setRowCount(0); //LIMPIAR TABLA
@@ -586,7 +585,7 @@ public class DCustomCraft extends javax.swing.JDialog {
     }
     
     private void bCotizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCotizarActionPerformed
-        // TODO add your handling code here:
+        //----------------EMPIEZA LA CREACION DEL CUADRO-----------------------
         largo=Double.parseDouble(tfLargo.getText());
         ancho=Double.parseDouble(tfAncho.getText());
         tipoCuadro=(String) cbTipoCuadro.getSelectedItem();
@@ -606,11 +605,41 @@ public class DCustomCraft extends javax.swing.JDialog {
         }
         System.out.println("----------EMPIEZA CUADRO CONTROLLER-----------");
         CuadroController cc1=new CuadroController(conex,largo,ancho,tipoCuadro,id_liston,frontal,trasera,varilla);
-        cc1.precio_costo_cuadro();
+        cc1.precio_costo_cuadro(); //CALCULA EL PRECIO DEL CUADRO Y LO GUARDA EN LA VARIABLE INTERNA DEL CUADROCONTROLLER
         JOptionPane.showMessageDialog(null,"SE HA COTIZADO CORRECTAMENTE PRECIO COSTO: " + cc1.getPrecioCuadro());
-        cc1.grabarCuadro(); //TERMINA DE CREAR EL CUADRO
-        //EMPIEZA A GUARDAR LOS PEDIDOS
+        cc1.grabarCuadro(); //GRABA EL CUADRO SIN LOS VALORES DE PRECIO FINAL Y LOS ADICIONALES
         JOptionPane.showMessageDialog(null,"SE HA GRABADO CORRECTAMENTE EL PEDIDO ID: " + cc1.getIdCuadro());
+        //----------------TERMINA DE CREAR EL CUADRO-----------------------
+        if(ac.getAdicionales().size()>0){
+            ArrayList<Integer> id_adi_box_det=new ArrayList();
+            try{
+                for (int i = 0; i < ac.getAdicionales().size(); i++) {
+                    Adicional adicional = ac.getAdicionales().get(i);
+                    id_adi_box_det.add(ac.grabarAdi_box_det(adicional.getId(), adicional.getCant())); //GRABA LOS ADICIONALES EN LA TABLA ADI_BOX_DET Y ALMACENA SU ID EN EL ARRAY.
+                }
+            }catch(Exception e){
+                System.out.println(e+" -> CREACION DE ADICIONALES");
+            }
+            // ADICIONAR EL NRO DE CUADRO DE REFERENCIA AL ADI_BOX_DET
+            try{
+                for (int i = 0; i < id_adi_box_det.size(); i++) {
+                    ac.adi_box_insertarCuadro(id_adi_box_det.get(i), cc1.getIdCuadro());
+                }
+            }catch(Exception e){
+                System.out.println(e+" -> VINCULACION DE ADICIONALES CON EL CUADRO");
+            }
+            //TERMINA LOS ADICIONALES
+            try{
+                cc1.cuadro_adi_insert();
+            }catch(Exception e){
+                System.out.println(e+" -> ADICIONA LOS DATOS DE ADICIONALES A LA TABLA CUADRO");
+            }
+        }
+        //****************ADICIONALES********************
+        
+        
+        
+        //EMPIEZA A GUARDAR LOS PEDIDOS
         pedido.crearPedido(pedido.getN_pedido());
         pedido.addCuadro(cc1.getIdCuadro());
         dvP.actualizarTablaCuadros();

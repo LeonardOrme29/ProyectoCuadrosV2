@@ -48,15 +48,15 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" pref="42" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="tfHasta" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="tfDesde" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="bBuscar" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="tfDesde" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="tfHasta" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="jScrollPane1" min="-2" pref="511" max="-2" attributes="0"/>
-              <EmptySpace pref="82" max="32767" attributes="0"/>
+              <EmptySpace min="-2" pref="82" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -116,16 +116,6 @@
         </Component>
       </SubComponents>
     </Container>
-    <Component class="javax.swing.JFormattedTextField" name="tfDesde">
-      <Properties>
-        <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
-          <Format format="dd-MM-yy" subtype="-1" type="1"/>
-        </Property>
-      </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tfDesdeActionPerformed"/>
-      </Events>
-    </Component>
     <Component class="javax.swing.JLabel" name="jLabel1">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
@@ -133,16 +123,6 @@
         </Property>
         <Property name="text" type="java.lang.String" value="Desde:"/>
       </Properties>
-    </Component>
-    <Component class="javax.swing.JFormattedTextField" name="tfHasta">
-      <Properties>
-        <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
-          <Format format="dd-MM-yy" subtype="-1" type="1"/>
-        </Property>
-      </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tfHastaActionPerformed"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel2">
       <Properties>
@@ -162,6 +142,22 @@
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bBuscarActionPerformed"/>
       </Events>
+    </Component>
+    <Component class="javax.swing.JTextField" name="tfDesde">
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tfDesdeActionPerformed"/>
+      </Events>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="tfDesde.addKeyListener(new KeyAdapter() {&#xa;            @Override&#xa;            public void keyTyped(KeyEvent e) {&#xa;                char c = e.getKeyChar();&#xa;                String text = tfDesde.getText();&#xa;                int length = text.length();&#xa;&#xa;                // Allow only digits, backspace, and delete&#xa;                if (!Character.isDigit(c) &amp;&amp; c != KeyEvent.VK_BACK_SPACE &amp;&amp; c != KeyEvent.VK_DELETE) {&#xa;                    e.consume();&#xa;                    return;&#xa;                }&#xa;&#xa;                // Automatically insert dashes at the appropriate positions when typing digits&#xa;                if (Character.isDigit(c)) {&#xa;                    if (length == 2 || length == 5) {&#xa;                        tfDesde.setText(text + &quot;-&quot;);&#xa;                        tfDesde.setCaretPosition(tfDesde.getText().length());&#xa;                    }&#xa;&#xa;                    // Limit to 8 characters (DD-MM-YY)&#xa;                    if (length &gt;= 8) {&#xa;                        e.consume();&#xa;                    }&#xa;                }&#xa;            }&#xa;&#xa;            @Override&#xa;            public void keyReleased(KeyEvent e) {&#xa;                String text = tfDesde.getText();&#xa;&#xa;                // If the text length is more than 5 and user presses backspace to remove parts, allow deletion&#xa;                if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE || e.getKeyCode() == KeyEvent.VK_DELETE) {&#xa;                    if (text.length() == 5 &amp;&amp; text.endsWith(&quot;-&quot;)) {&#xa;                        tfDesde.setText(text.substring(0, 5));&#xa;                    } else if (text.length() == 2 &amp;&amp; text.endsWith(&quot;-&quot;)) {&#xa;                        tfDesde.setText(text.substring(0, 2));&#xa;                    }&#xa;                }&#xa;            }&#xa;        });"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JTextField" name="tfHasta">
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tfHastaActionPerformed"/>
+      </Events>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="tfHasta.addKeyListener(new KeyAdapter() {&#xa;            @Override&#xa;            public void keyTyped(KeyEvent e) {&#xa;                char c = e.getKeyChar();&#xa;                String text = tfHasta.getText();&#xa;                int length = text.length();&#xa;&#xa;                // Allow only digits, backspace, and delete&#xa;                if (!Character.isDigit(c) &amp;&amp; c != KeyEvent.VK_BACK_SPACE &amp;&amp; c != KeyEvent.VK_DELETE) {&#xa;                    e.consume();&#xa;                    return;&#xa;                }&#xa;&#xa;                // Automatically insert dashes at the appropriate positions when typing digits&#xa;                if (Character.isDigit(c)) {&#xa;                    if (length == 2 || length == 5) {&#xa;                        tfHasta.setText(text + &quot;-&quot;);&#xa;                        tfHasta.setCaretPosition(tfHasta.getText().length());&#xa;                    }&#xa;&#xa;                    // Limit to 8 characters (DD-MM-YY)&#xa;                    if (length &gt;= 8) {&#xa;                        e.consume();&#xa;                    }&#xa;                }&#xa;            }&#xa;&#xa;            @Override&#xa;            public void keyReleased(KeyEvent e) {&#xa;                String text = tfHasta.getText();&#xa;&#xa;                // If the text length is more than 5 and user presses backspace to remove parts, allow deletion&#xa;                if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE || e.getKeyCode() == KeyEvent.VK_DELETE) {&#xa;                    if (text.length() == 5 &amp;&amp; text.endsWith(&quot;-&quot;)) {&#xa;                        tfHasta.setText(text.substring(0, 5));&#xa;                    } else if (text.length() == 2 &amp;&amp; text.endsWith(&quot;-&quot;)) {&#xa;                        tfHasta.setText(text.substring(0, 2));&#xa;                    }&#xa;                }&#xa;            }&#xa;        });"/>
+      </AuxValues>
     </Component>
   </SubComponents>
 </Form>

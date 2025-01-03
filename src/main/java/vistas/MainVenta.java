@@ -30,6 +30,7 @@ public class MainVenta extends javax.swing.JFrame {
         jMenuBar1 = new javax.swing.JMenuBar();
         jmVentas = new javax.swing.JMenu();
         jaGenerarVenta = new javax.swing.JMenuItem();
+        jaReservaPedido = new javax.swing.JMenuItem();
         jaAnularVenta = new javax.swing.JMenuItem();
         jmInventario = new javax.swing.JMenu();
         jaKardex = new javax.swing.JMenuItem();
@@ -70,7 +71,20 @@ public class MainVenta extends javax.swing.JFrame {
         });
         jmVentas.add(jaGenerarVenta);
 
+        jaReservaPedido.setText("RESERVA DE PEDIDO");
+        jaReservaPedido.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jaReservaPedidoActionPerformed(evt);
+            }
+        });
+        jmVentas.add(jaReservaPedido);
+
         jaAnularVenta.setText("ANULAR VENTA");
+        jaAnularVenta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jaAnularVentaActionPerformed(evt);
+            }
+        });
         jmVentas.add(jaAnularVenta);
 
         jMenuBar1.add(jmVentas);
@@ -167,6 +181,14 @@ public class MainVenta extends javax.swing.JFrame {
         dventas.setVisible(true);
     }//GEN-LAST:event_jaGenerarVentaActionPerformed
 
+    private void jaAnularVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jaAnularVentaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jaAnularVentaActionPerformed
+
+    private void jaReservaPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jaReservaPedidoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jaReservaPedidoActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -212,6 +234,7 @@ public class MainVenta extends javax.swing.JFrame {
     private javax.swing.JMenuItem jaMateriales;
     private javax.swing.JMenuItem jaProductos;
     private javax.swing.JMenuItem jaReportesVentas;
+    private javax.swing.JMenuItem jaReservaPedido;
     private javax.swing.JMenu jmAdministracion;
     private javax.swing.JMenu jmInventario;
     private javax.swing.JMenu jmReportes;

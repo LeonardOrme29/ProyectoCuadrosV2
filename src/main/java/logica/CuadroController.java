@@ -6,6 +6,7 @@ package logica;
 
 import clases.cuadros.*;
 import clases.materiales.*;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -154,7 +155,34 @@ public class CuadroController {
         return -1;
     }
     public void grabarCuadro() {
-        String sSQL = "INSERT INTO cuadro (largo, ancho, tipo, liston, frontal, trasera, varilla, precio, custom, pedido_estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'S', 'P')";
+        try {
+            // Definir el procedimiento almacenado
+            String procedimiento = "{ CALL cuadro_grabarCuadro(?, ?, ?, ?, ?, ?, ?, ?, ?) }";
+            try (CallableStatement cs = conex.prepareCall(procedimiento)) {
+                // Establecer los parámetros de entrada
+                cs.setDouble(1, largo);
+                cs.setDouble(2, ancho);
+                cs.setString(3, tipoCuadro);
+                cs.setInt(4, idListon);
+                cs.setInt(5, id_frontal);
+                cs.setInt(6, id_trasera);
+                cs.setInt(7, id_varilla);
+                cs.setString(8, precioCuadro);
+
+                // Registrar el parámetro de salida
+                cs.registerOutParameter(9, java.sql.Types.INTEGER);
+
+                // Ejecutar el procedimiento
+                cs.execute();
+
+                // Obtener el ID generado
+                idCuadro = cs.getInt(9);
+                JOptionPane.showMessageDialog(null, "El cuadro se guardó correctamente con el ID: " + idCuadro);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al ejecutar la inserción: " + e.getMessage());
+        }
+        /*String sSQL = "INSERT INTO cuadro (largo, ancho, tipo, liston, frontal, trasera, varilla, precio, custom, pedido_estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'S', 'P')";
         try {
             // Preparar la sentencia SQL con la opción de obtener las claves generadas
             PreparedStatement pst = conex.prepareStatement(sSQL, PreparedStatement.RETURN_GENERATED_KEYS);
@@ -162,33 +190,27 @@ public class CuadroController {
             pst.setDouble(2, ancho);
             pst.setString(3, tipoCuadro);
             pst.setInt(4, idListon);
-
             // Si id_frontal es 0, establecer el valor como NULL en la base de datos
             if (id_frontal == 0) {
                 pst.setNull(5, java.sql.Types.INTEGER);
             } else {
                 pst.setInt(5, id_frontal);
             }
-
             // Si id_trasera es 0, establecer el valor como NULL en la base de datos
             if (id_trasera == 0) {
                 pst.setNull(6, java.sql.Types.INTEGER);
             } else {
                 pst.setInt(6, id_trasera);
             }
-
             // Si id_varilla es 0, establecer el valor como NULL en la base de datos
             if (id_varilla == 0) {
                 pst.setNull(7, java.sql.Types.INTEGER);
             } else {
                 pst.setInt(7, id_varilla);
             }
-
             pst.setString(8, precioCuadro);
-
             // Ejecutar la inserción
             int rowsAffected = pst.executeUpdate();
-
             if (rowsAffected > 0) {
                 // Si se insertó correctamente, obtener el ID generado
                 ResultSet rs = pst.getGeneratedKeys();
@@ -201,7 +223,7 @@ public class CuadroController {
             }
         } catch (SQLException e) {
             System.out.println("Error al ejecutar la inserción: " + e.getMessage());
-        }
+        }*/
     }
 
     //MENU - CALCULAR PRECIO // TAMBIEN MANDA A GRABAR A BD
@@ -230,7 +252,19 @@ public class CuadroController {
         }
 
     }
-
+    
+    public void cuadro_adi_insert(){
+        String sSQL="{ CALL cuadro_adi_insert(?) }";
+        try (CallableStatement cs = conex.prepareCall(sSQL)){
+            // Establecer el parámetro de entrada del procedimiento
+            cs.setInt(1,idCuadro);
+            // Ejecutar el procedimiento
+            cs.execute();
+        }catch(SQLException e){
+            System.out.println(e);
+        }
+    }
+    
     //Setters
     public void setPrecioCuadro(double precioCuadro) {
         DecimalFormat formato = new DecimalFormat("#.##");
