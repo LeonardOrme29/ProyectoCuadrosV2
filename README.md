@@ -1,5 +1,1 @@
-git add --a
-git commit -m "commit"
-git push origin
-
-git pull origin
+Prototype of a sales system for a custom frames business
